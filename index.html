@@ -812,6 +812,42 @@ const MARKETS = {
   },
 };
 
+// ── CURRENCY OVERRIDES ──
+// Intl/CLDR diverges from real market convention in specific ways.
+// Use Intl only for number separators. Apply these overrides for symbol, spacing, precision.
+const CURRENCY_OVERRIDES = {
+  sg: { symbol: 'S$', position: 'prefix', space: false, precision: 2,
+        issues: [['Symbol', '$ (bare)', 'S$ — bare $ reads as USD in multi-market UI']] },
+  my: { symbol: 'RM',  position: 'prefix', space: false, precision: 2,
+        issues: [['Spacing', 'RM\u00A01,234.56', 'RM1,234.56 — Grab, Shopee, banking apps use no space']] },
+  id: { symbol: 'Rp',  position: 'prefix', space: false, precision: 0,
+        issues: [['Spacing', 'Rp\u00A01.234,56', 'Rp1.234'], ['Decimals', ',56 shown', 'IDR has no subunit — never show decimals']] },
+  kh: { symbol: '៛',  position: 'suffix', space: true,  precision: 0,
+        issues: [['Symbol', 'unreliable glyph', '៛ must be hardcoded — browser support patchy'], ['Decimals', '1,234.56', 'KHR has no subunit']] },
+  vn: { symbol: '₫',  position: 'suffix', space: true,  precision: 0,
+        issues: [['Decimals', '1.235 ₫ (2dp)', 'VND has no subunit'], ['Spacing', 'regular space', 'NBSP (\u00A0) prevents symbol wrapping to new line']] },
+  co: { symbol: '$',   position: 'prefix', space: false, precision: 0,
+        issues: [['Spacing', '$\u00A01.234,56', '$1.234 — no space'], ['Decimals', ',56 shown', 'COP centavos not used in consumer UI']] },
+  pe: { symbol: 'S/',  position: 'prefix', space: true,  precision: 2,
+        issues: [['Spacing', 'regular space', 'NBSP prevents symbol+number wrapping apart']] },
+  in: { symbol: '₹',  position: 'prefix', space: false, precision: 2,
+        issues: [['Grouping', 'correct via en-IN', 'Always pass en-IN locale — some Android versions default to Western grouping']] },
+};
+
+function formatCurrencyOverride(amount, code) {
+  const m = MARKETS[code];
+  const ov = CURRENCY_OVERRIDES[code];
+  // Intl handles number separators correctly per locale — override only symbol/spacing/precision
+  const numStr = new Intl.NumberFormat(m.icuLocale, {
+    minimumFractionDigits: ov.precision,
+    maximumFractionDigits: ov.precision,
+  }).format(amount);
+  const sp = ov.space ? '\u00A0' : '';
+  return ov.position === 'prefix'
+    ? `${ov.symbol}${sp}${numStr}`
+    : `${numStr}${sp}${ov.symbol}`;
+}
+
 let currentMarket = 'sg';
 let currentTool = null;
 let fmtMode = 'currency';
@@ -1871,45 +1907,91 @@ function renderMarket() {
           <tr><td>Currency display</td><td class="mono">narrowSymbol</td></tr>
         </table>
       </div>
+      ${(() => {
+        const ov = CURRENCY_OVERRIDES[currentMarket];
+        const issues = ov.issues;
+        const issueRows = issues.map(([field, bad, good]) =>
+          `<tr><td style="width:100px">${field}</td><td class="mono" style="color:#c0392b">${bad}</td><td class="mono" style="color:#27ae60">→ ${good}</td></tr>`
+        ).join('');
+        const langParts = m.icuLocale.split('-');
+        const spaceJs   = ov.space ? "'\\u00A0'" : "''";
+        const spaceKt   = ov.space ? '"\\u00A0"' : '""';
+        const spaceSw   = ov.space ? '"\\u{00A0}"' : '""';
+        return `
+      <div class="table-wrap" style="border-color:#f0c66e">
+        <div class="table-title" style="background:#fff8e6;color:#7a4f00">⚠ Known issues using Intl/SDK directly for ${m.name}</div>
+        <table class="ref-table">
+          <tr><th>Issue</th><th>Intl default</th><th>Correct</th></tr>
+          ${issueRows}
+        </table>
+      </div>
       <div class="table-wrap">
-        <div class="table-title">JavaScript (Intl)</div>
-        <div class="code-block">
-<span class="cm">// Currency</span>
-<span class="ck">new</span> Intl.<span class="cs">NumberFormat</span>(<span class="cs">'${m.icuLocale}'</span>, {
-  <span class="ck">style</span>: <span class="cs">'currency'</span>,
-  <span class="ck">currency</span>: <span class="cs">'${m.icuCurrency}'</span>,
-  <span class="ck">currencyDisplay</span>: <span class="cs">'narrowSymbol'</span>,
-}).<span class="cs">format</span>(<span class="cn">1234.56</span>);
+        <div class="table-title">Shared config — one source of truth across platforms</div>
+        <div class="code-block"><span class="cm">// Host on backend or shared constants file</span>
+<span class="cm">// Web · Android · iOS all read from this</span>
+<span class="ck">const</span> CURRENCY = {
+  <span class="cs">"${currentMarket.toUpperCase()}"</span>: {
+    symbol:    <span class="cs">"${ov.symbol}"</span>,
+    position:  <span class="cs">"${ov.position}"</span>,
+    space:     <span class="cn">${ov.space}</span>,
+    precision: <span class="cn">${ov.precision}</span>,
+    locale:    <span class="cs">"${m.icuLocale}"</span>
+  }
+};</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">JavaScript — production-ready</div>
+        <div class="code-block"><span class="cm">// Intl handles separators. Override handles symbol/spacing/precision.</span>
+<span class="ck">function</span> <span class="cs">formatPrice</span>(amount, config) {
+  <span class="ck">const</span> num = <span class="ck">new</span> Intl.<span class="cs">NumberFormat</span>(config.locale, {
+    minimumFractionDigits: config.precision,
+    maximumFractionDigits: config.precision,
+  }).<span class="cs">format</span>(amount);
+  <span class="ck">const</span> sp = config.space ? <span class="cs">'\\u00A0'</span> : <span class="cs">''</span>;
+  <span class="ck">return</span> config.position === <span class="cs">'prefix'</span>
+    ? <span class="cs">\`\${config.symbol}\${sp}\${num}\`</span>
+    : <span class="cs">\`\${num}\${sp}\${config.symbol}\`</span>;
+}
 
-<span class="cm">// Date</span>
-<span class="ck">new</span> Intl.<span class="cs">DateTimeFormat</span>(<span class="cs">'${m.icuLocale}'</span>, {
-  <span class="ck">day</span>: <span class="cs">'numeric'</span>,
-  <span class="ck">month</span>: <span class="cs">'short'</span>,
-}).<span class="cs">format</span>(<span class="ck">new</span> <span class="cs">Date</span>());
+<span class="cm">// ${m.name} → "${formatCurrencyOverride(1234.56, currentMarket)}"</span>
+<span class="cs">formatPrice</span>(<span class="cn">1234.56</span>, CURRENCY[<span class="cs">"${currentMarket.toUpperCase()}"</span>]);
 
-<span class="cm">// Phone input — strip and reformat</span>
-<span class="ck">const</span> raw = input.<span class="cs">replace</span>(<span class="cn">/[^\\d+]/g</span>, <span class="cs">''</span>);
-</div>
+<span class="cm">// Date (unchanged — Intl is correct)</span>
+<span class="ck">new</span> Intl.<span class="cs">DateTimeFormat</span>(<span class="cs">'${m.icuLocale}'</span>, { day:<span class="cs">'numeric'</span>, month:<span class="cs">'short'</span> }).<span class="cs">format</span>(<span class="ck">new</span> <span class="cs">Date</span>());</div>
       </div>
       <div class="table-wrap">
-        <div class="table-title">Android / Kotlin</div>
-        <div class="code-block">
-<span class="ck">val</span> formatter = NumberFormat
-  .<span class="cs">getCurrencyInstance</span>(Locale(<span class="cs">"${m.icuLocale.split('-')[0]}"</span>, <span class="cs">"${m.icuLocale.split('-')[1]}"</span>))
-formatter.currency = Currency.<span class="cs">getInstance</span>(<span class="cs">"${m.icuCurrency}"</span>)
-formatter.<span class="cs">format</span>(<span class="cn">1234.56</span>)
-</div>
+        <div class="table-title">Android / Kotlin — production-ready</div>
+        <div class="code-block"><span class="cm">// Use NumberFormat only for number separators</span>
+<span class="ck">fun</span> <span class="cs">formatPrice</span>(amount: Double, config: CurrencyConfig): String {
+  <span class="ck">val</span> formatter = NumberFormat.<span class="cs">getNumberInstance</span>(Locale(<span class="cs">"${langParts[0]}"</span>, <span class="cs">"${langParts[1] || langParts[0].toUpperCase()}"</span>))
+  formatter.minimumFractionDigits = config.precision
+  formatter.maximumFractionDigits = config.precision
+  <span class="ck">val</span> num = formatter.<span class="cs">format</span>(amount)
+  <span class="ck">val</span> sp = <span class="ck">if</span> (config.space) <span class="cs">"\\u00A0"</span> <span class="ck">else</span> <span class="cs">""</span>
+  <span class="ck">return if</span> (config.position == <span class="cs">"prefix"</span>) <span class="cs">"\${config.symbol}\$sp\$num"</span>
+         <span class="ck">else</span> <span class="cs">"\$num\$sp\${config.symbol}"</span>
+}
+
+<span class="cm">// ${m.name} → "${formatCurrencyOverride(1234.56, currentMarket)}"</span></div>
       </div>
       <div class="table-wrap">
-        <div class="table-title">iOS / Swift</div>
-        <div class="code-block">
-<span class="ck">let</span> formatter = NumberFormatter()
-formatter.numberStyle = .<span class="cs">currency</span>
-formatter.locale = Locale(identifier: <span class="cs">"${m.icuLocale.replace('-','_')}"</span>)
-formatter.currencyCode = <span class="cs">"${m.icuCurrency}"</span>
-formatter.<span class="cs">string</span>(from: <span class="cn">1234.56</span>)
-</div>
-      </div>
+        <div class="table-title">iOS / Swift — production-ready</div>
+        <div class="code-block"><span class="ck">func</span> <span class="cs">formatPrice</span>(_ amount: Double, config: CurrencyConfig) -> String {
+  <span class="ck">let</span> formatter = NumberFormatter()
+  formatter.numberStyle = .<span class="cs">decimal</span>
+  formatter.locale = Locale(identifier: <span class="cs">"${m.icuLocale.replace('-','_')}"</span>)
+  formatter.minimumFractionDigits = config.precision
+  formatter.maximumFractionDigits = config.precision
+  <span class="ck">guard let</span> num = formatter.<span class="cs">string</span>(from: NSNumber(value: amount)) <span class="ck">else</span> { <span class="ck">return</span> <span class="cs">""</span> }
+  <span class="ck">let</span> sp: String = config.space ? <span class="cs">"\\u{00A0}"</span> : <span class="cs">""</span>
+  <span class="ck">return</span> config.position == <span class="cs">"prefix"</span>
+    ? <span class="cs">"\\(config.symbol)\\(sp)\\(num)"</span>
+    : <span class="cs">"\\(num)\\(sp)\\(config.symbol)"</span>
+}
+
+<span class="cm">// ${m.name} → "${formatCurrencyOverride(1234.56, currentMarket)}"</span></div>
+      </div>`;
+      })()}
     </div>
 
     <div id="tab-numbers" class="section ${activeTab==='numbers'?'active':''}">
@@ -2008,7 +2090,7 @@ function renderFormatter() {
   main.innerHTML = `
     <div class="page-header">
       <h1>⌨ Live Locale Formatter</h1>
-      <div class="sub">Type any number, date, or time — see how every market renders it instantly using real browser Intl APIs.</div>
+      <div class="sub">${fmtMode === 'currency' ? 'Corrected column applies market-specific overrides on top of Intl. Intl default shows raw browser output — spot the differences.' : 'Type any number, date, or time — see how every market renders it instantly.'}</div>
     </div>
     <div class="fmt-mode-bar">${modeBar}</div>
     <input id="fmt-input" class="fmt-input" type="text"
@@ -2020,9 +2102,9 @@ function renderFormatter() {
       <table class="fmt-result-table">
         <thead><tr>
           <th>Market</th>
-          <th>${isNumeric ? 'Formatted' : 'Short format'}</th>
-          <th>${isNumeric ? 'Manual symbol' : 'Long / extended'}</th>
-          <th>Notes</th>
+          <th>${fmtMode === 'currency' ? 'Corrected' : fmtMode === 'number' ? 'Formatted' : 'Short format'}</th>
+          <th>${fmtMode === 'currency' ? 'Intl default' : fmtMode === 'number' ? 'Compact' : 'Long / extended'}</th>
+          <th>${fmtMode === 'currency' ? 'Override reason' : 'Notes'}</th>
         </tr></thead>
         <tbody id="fmt-results"></tbody>
       </table>
@@ -2065,11 +2147,33 @@ function updateFormatter() {
       let primary = '—', secondary = '—', note = '';
       try {
         if (fmtMode === 'currency') {
-          primary = new Intl.NumberFormat(m.icuLocale, {
+          // Corrected: override symbol, spacing, precision — Intl handles separators
+          primary = formatCurrencyOverride(num, code);
+          // Raw: what Intl produces natively (may have wrong symbol, spacing, decimals)
+          secondary = new Intl.NumberFormat(m.icuLocale, {
             style: 'currency', currency: m.icuCurrency, currencyDisplay: 'narrowSymbol',
           }).format(num);
-          secondary = new Intl.NumberFormat(m.icuLocale).format(num);
-          note = m.currency + ' · ' + m.currencyPosition;
+          // Highlight rows where corrected ≠ Intl default
+          const changed = primary.replace(/\u00A0/g,' ') !== secondary.replace(/\u00A0/g,' ');
+          const ov = CURRENCY_OVERRIDES[code];
+          note = ov.issues.map(([field]) => field).join(' · ');
+          const rowStyle = changed ? 'background:#fffbf0' : '';
+          rows += `<tr class="fmt-row" style="${rowStyle}">
+            <td class="fmt-market-cell">${m.flag} ${m.name}${changed ? ' <span style="font-size:9px;background:#f59e0b;color:white;padding:1px 5px;border-radius:3px;font-family:var(--mono);letter-spacing:0.04em">OVERRIDE</span>' : ''}</td>
+            <td class="fmt-val">${primary}</td>
+            <td class="fmt-val-secondary" style="${changed?'color:#c0392b;text-decoration:line-through':''}">${secondary}</td>
+            <td class="fmt-note-cell">${note}</td>
+          </tr>`;
+          if (code === 'kh') {
+            const usd = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',currencyDisplay:'narrowSymbol'}).format(num/4100);
+            rows += `<tr class="fmt-row fmt-sub-row">
+              <td class="fmt-market-cell" style="padding-left:28px;opacity:0.65">↳ USD equiv.</td>
+              <td class="fmt-val" style="font-size:13px">${usd}</td>
+              <td class="fmt-val-secondary">÷ 4,100 KHR/USD</td>
+              <td class="fmt-note-cell">Dual-currency market</td>
+            </tr>`;
+          }
+          continue;
         } else {
           primary = new Intl.NumberFormat(m.icuLocale).format(num);
           secondary = new Intl.NumberFormat(m.icuLocale, { notation:'compact', compactDisplay:'short' }).format(num);
@@ -2082,17 +2186,6 @@ function updateFormatter() {
         <td class="fmt-val-secondary">${secondary}</td>
         <td class="fmt-note-cell">${note}</td>
       </tr>`;
-      if (code === 'kh' && fmtMode === 'currency') {
-        try {
-          const usd = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',currencyDisplay:'narrowSymbol'}).format(num/4100);
-          rows += `<tr class="fmt-row fmt-sub-row">
-            <td class="fmt-market-cell" style="padding-left:28px;opacity:0.65">↳ USD equiv.</td>
-            <td class="fmt-val" style="font-size:13px">${usd}</td>
-            <td class="fmt-val-secondary">÷ 4,100 KHR/USD</td>
-            <td class="fmt-note-cell">Dual-currency market</td>
-          </tr>`;
-        } catch(e) {}
-      }
     }
 
   } else if (fmtMode === 'date') {
