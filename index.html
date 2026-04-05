@@ -765,7 +765,7 @@ const NUM_DATA = {
   vn: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'nghìn',m:'triệu',ex:['120 nghìn ₫','1,2 triệu ₫'],note:'Vietnamese words standard. K/M acceptable in very informal UI only.'}, ordinal:{ex:['1.','thứ 1','thứ nhất'],note:'Period after number (1.) or "thứ" prefix for formal.'}, neg:{ex:['-120.000 ₫'],note:'Minus prefix. Period as thousands separator.'}, frac:{ex:['1,5 giờ','0,5 km'],note:'Comma as decimal in Vietnamese.'} },
   co: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['$1,2 mil','$4,5 millones'],note:'"mil" not K. "millones" not M. Very different from SEA.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Spanish ordinals use degree symbol. "primero/segundo" for formal.'}, neg:{ex:['-$1.234.567'],note:'Minus prefix. Period as thousands, comma as decimal.'}, frac:{ex:['1,5 horas','0,5 km'],note:'Comma as decimal.'} },
   pe: { sep:'comma/period', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['S/ 1,200','S/ 4,500'],note:'Write full number or "mil". Not K/M.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Same as Colombian Spanish.'}, neg:{ex:['-S/ 1,234.56'],note:'Minus prefix. Comma thousands, period decimal.'}, frac:{ex:['1.5 horas','0.5 km'],note:'Period as decimal (different from Colombia).'} },
-  in: { sep:'comma/period (South Asian grouping)', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'K or L (lakh)',m:'Cr (crore)',ex:['₹1.2K','₹1.5L','₹2.5Cr'],note:'K/M internationally; L (lakh = 100K) and Cr (crore = 10M) in Indian context. Never use L/Cr in international UI.'}, ordinal:{ex:['1st','2nd','3rd','4th'],note:'Standard English ordinals.'}, neg:{ex:['-₹12.50','(₹12.50)'],note:'Minus prefix standard. Parentheses for accounting contexts.'}, frac:{ex:['1.5 hrs','0.5 km'],note:'Decimal notation standard.'} },
+  in: { sep:'south-asian', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'K or L (lakh)',m:'Cr (crore)',ex:['₹1.2K','₹1.5L','₹2.5Cr'],note:'K/M internationally; L (lakh = 100K) and Cr (crore = 10M) in Indian context. Never use L/Cr in international UI.'}, ordinal:{ex:['1st','2nd','3rd','4th'],note:'Standard English ordinals.'}, neg:{ex:['-₹12.50','(₹12.50)'],note:'Minus prefix standard. Parentheses for accounting contexts.'}, frac:{ex:['1.5 hrs','0.5 km'],note:'Decimal notation standard.'} },
 };
 
 // ── NAME / FORM DATA ──
@@ -979,8 +979,9 @@ function renderNumbers(m, code) {
   const sepRows = {
     'comma/period': {thou:'1,000',dec:'1.5',label:'comma=thousands · period=decimal'},
     'period/comma': {thou:'1.000',dec:'1,5',label:'period=thousands · comma=decimal'},
+    'south-asian': {thou:'1,00,000',dec:'1.5',label:'South Asian grouping — 2-2-3 digits (lakh/crore system)'},
   };
-  const sr = sepRows[n.sep];
+  const sr = sepRows[n.sep] || {thou:'—',dec:'—',label:'see notes'};
   return `
     <div class="table-wrap">
       <div class="table-title">Separator pattern — engineers start here</div>
@@ -1589,11 +1590,11 @@ function renderMarket() {
           </tr>
           <tr>
             <td>Grouping system</td>
-            <td>${currentMarket==='id'||currentMarket==='vn'||currentMarket==='co' ? '<span class="badge badge-partial">Period thousands · 1.234.567</span>' : 'Western — 1,234,567'}</td>
+            <td>${currentMarket==='in' ? '<span class="badge badge-missing">South Asian — 1,23,456 (lakh grouping)</span>' : currentMarket==='id'||currentMarket==='vn'||currentMarket==='co' ? '<span class="badge badge-partial">Period thousands · 1.234.567</span>' : 'Western — 1,234,567'}</td>
           </tr>
           <tr>
             <td>Decimals shown</td>
-            <td>${currentMarket==='kh'||currentMarket==='vn'||currentMarket==='id' ? 'No — no meaningful subunit' : 'Yes — 2 decimal places'}</td>
+            <td>${currentMarket==='kh'||currentMarket==='vn'||currentMarket==='id' ? 'No — no meaningful subunit' : 'Yes — 2 decimal places (paise, rarely used)'}</td>
           </tr>
         </table>
       </div>
