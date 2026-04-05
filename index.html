@@ -837,7 +837,6 @@ const CURRENCY_OVERRIDES = {
 function formatCurrencyOverride(amount, code) {
   const m = MARKETS[code];
   const ov = CURRENCY_OVERRIDES[code];
-  // Intl handles number separators correctly per locale — override only symbol/spacing/precision
   const numStr = new Intl.NumberFormat(m.icuLocale, {
     minimumFractionDigits: ov.precision,
     maximumFractionDigits: ov.precision,
@@ -848,10 +847,60 @@ function formatCurrencyOverride(amount, code) {
     : `${numStr}${sp}${ov.symbol}`;
 }
 
+// ── COMPACT NUMBER OVERRIDES ──
+// Intl compact notation diverges from real market usage for ID, VN, CO, PE.
+// Tourist mode switches to internationally recognisable K/M.
+const COMPACT_OVERRIDES = {
+  sg: { local:{k:'K',     m:'M',       space:false}, tourist:null,
+        intlIssue:null },
+  my: { local:{k:'K',     m:'M',       space:false}, tourist:null,
+        intlIssue:null },
+  id: { local:{k:'rb',    m:'jt',      space:false}, tourist:{k:'K', m:'M', space:false},
+        intlIssue:'Intl adds a space — Indonesian apps use no space (123rb, 1,2jt). rb = ribu (thousand), jt = juta (million).' },
+  kh: { local:{k:'K',     m:'M',       space:false}, tourist:{k:'K', m:'M', space:false, usd:true},
+        intlIssue:null,
+        touristNote:'Tourists transact almost exclusively in USD in Cambodia. Tourist mode shows USD as primary currency.' },
+  vn: { local:{k:'nghìn', m:'triệu',   space:true},  tourist:{k:'K', m:'M', space:false},
+        intlIssue:'Intl returns "N" (first letter of nghìn) — not used in any Vietnamese consumer app. Use nghìn/triệu for local, K/M for tourist.' },
+  co: { local:{k:'mil',   m:'M',       space:true},  tourist:{k:'K', m:'M', space:false},
+        intlIssue:'Intl returns lowercase "k" — Colombian Spanish convention is "mil" (e.g. $123 mil, not $123k). Million: use M.' },
+  pe: { local:{k:'mil',   m:'M',       space:true},  tourist:{k:'K', m:'M', space:false},
+        intlIssue:'Same as Colombia — "mil" is the correct Peruvian Spanish abbreviation for thousands.' },
+  in: { local:{k:'K',     m:'L',       space:false}, tourist:{k:'K', m:'M', space:false},
+        intlIssue:null,
+        touristNote:'Intl en-IN correctly returns 1.2L (lakh) and 1.2Cr (crore). Tourist mode uses K/M — international visitors won\'t know what L means.' },
+};
+
+function formatCompact(amount, code) {
+  const m = MARKETS[code];
+  const ov = COMPACT_OVERRIDES[code];
+  const cfg = (touristMode && ov.tourist) ? ov.tourist : ov.local;
+  // India local: Intl en-IN handles lakh/crore correctly — defer to it
+  if (code === 'in' && !touristMode) {
+    return new Intl.NumberFormat('en-IN', { notation:'compact', compactDisplay:'short' }).format(amount);
+  }
+  const abs = Math.abs(amount);
+  if (abs < 1000) return new Intl.NumberFormat(m.icuLocale, { maximumFractionDigits:1 }).format(amount);
+  const [div, sfx] = abs >= 1e6 ? [1e6, cfg.m] : [1e3, cfg.k];
+  const rounded = Math.round((amount / div) * 10) / 10;
+  const numStr = new Intl.NumberFormat(m.icuLocale, {
+    minimumFractionDigits: rounded % 1 === 0 ? 0 : 1,
+    maximumFractionDigits: 1,
+  }).format(rounded);
+  const sp = cfg.space ? '\u00A0' : '';
+  return `${numStr}${sp}${sfx}`;
+}
+
 let currentMarket = 'sg';
 let currentTool = null;
 let fmtMode = 'currency';
 let hiddenMarkets = new Set();
+let touristMode = false;
+
+function toggleTouristMode() {
+  touristMode = !touristMode;
+  if (currentTool === 'formatter') renderFormatter();
+}
 
 function selectMarket(code, e) {
   currentMarket = code;
@@ -2090,9 +2139,16 @@ function renderFormatter() {
   main.innerHTML = `
     <div class="page-header">
       <h1>⌨ Live Locale Formatter</h1>
-      <div class="sub">${fmtMode === 'currency' ? 'Corrected column applies market-specific overrides on top of Intl. Intl default shows raw browser output — spot the differences.' : 'Type any number, date, or time — see how every market renders it instantly.'}</div>
+      <div class="sub">${fmtMode === 'currency' || fmtMode === 'number' ? 'Corrected output applies market-specific overrides. Intl default shows raw browser output — OVERRIDE rows highlight where they differ.' : 'Type any date or time — see how every market renders it.'}</div>
     </div>
-    <div class="fmt-mode-bar">${modeBar}</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:1rem">
+      <div class="fmt-mode-bar" style="margin-bottom:0">${modeBar}</div>
+      ${fmtMode === 'currency' || fmtMode === 'number' ? `
+      <button onclick="toggleTouristMode()" style="display:flex;align-items:center;gap:6px;padding:6px 14px;font-size:13px;font-family:var(--sans);border:1px solid ${touristMode ? 'var(--red)' : 'var(--rule)'};border-radius:6px;cursor:pointer;background:${touristMode ? 'var(--red-dim)' : 'var(--surface)'};color:${touristMode ? 'var(--red)' : 'var(--ink2)'};transition:all 0.12s;white-space:nowrap">
+        ${touristMode ? '✈ Tourist mode' : '🏠 Local mode'}
+        <span style="font-size:10px;font-family:var(--mono);opacity:0.7">${touristMode ? 'K/M · USD for KH' : 'local abbrev.'}</span>
+      </button>` : ''}
+    </div>
     <input id="fmt-input" class="fmt-input" type="text"
       placeholder="${placeholder}"
       oninput="updateFormatter()"
@@ -2102,9 +2158,9 @@ function renderFormatter() {
       <table class="fmt-result-table">
         <thead><tr>
           <th>Market</th>
-          <th>${fmtMode === 'currency' ? 'Corrected' : fmtMode === 'number' ? 'Formatted' : 'Short format'}</th>
-          <th>${fmtMode === 'currency' ? 'Intl default' : fmtMode === 'number' ? 'Compact' : 'Long / extended'}</th>
-          <th>${fmtMode === 'currency' ? 'Override reason' : 'Notes'}</th>
+          <th>${fmtMode === 'currency' ? 'Corrected' : fmtMode === 'number' ? 'Full number' : 'Short format'}</th>
+          <th>${fmtMode === 'currency' ? 'Intl default' : fmtMode === 'number' ? 'Compact (corrected)' : 'Long / extended'}</th>
+          <th>${fmtMode === 'currency' || fmtMode === 'number' ? 'Intl default / notes' : 'Notes'}</th>
         </tr></thead>
         <tbody id="fmt-results"></tbody>
       </table>
@@ -2165,19 +2221,51 @@ function updateFormatter() {
             <td class="fmt-note-cell">${note}</td>
           </tr>`;
           if (code === 'kh') {
-            const usd = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',currencyDisplay:'narrowSymbol'}).format(num/4100);
-            rows += `<tr class="fmt-row fmt-sub-row">
-              <td class="fmt-market-cell" style="padding-left:28px;opacity:0.65">↳ USD equiv.</td>
-              <td class="fmt-val" style="font-size:13px">${usd}</td>
-              <td class="fmt-val-secondary">÷ 4,100 KHR/USD</td>
-              <td class="fmt-note-cell">Dual-currency market</td>
-            </tr>`;
+            const usdAmt = num / 4100;
+            const usd = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',currencyDisplay:'narrowSymbol'}).format(usdAmt);
+            if (touristMode) {
+              // Tourist mode: USD is primary, KHR is secondary
+              rows += `<tr class="fmt-row fmt-sub-row" style="background:#e8f5e9">
+                <td class="fmt-market-cell" style="padding-left:28px">↳ Tourist price (USD)</td>
+                <td class="fmt-val" style="color:#27ae60;font-weight:600">${usd}</td>
+                <td class="fmt-val-secondary">${primary} KHR</td>
+                <td class="fmt-note-cell" style="color:#27ae60">Tourist mode — USD is primary in Cambodia</td>
+              </tr>`;
+            } else {
+              rows += `<tr class="fmt-row fmt-sub-row">
+                <td class="fmt-market-cell" style="padding-left:28px;opacity:0.65">↳ USD equiv.</td>
+                <td class="fmt-val" style="font-size:13px">${usd}</td>
+                <td class="fmt-val-secondary">÷ 4,100 KHR/USD</td>
+                <td class="fmt-note-cell">Dual-currency market</td>
+              </tr>`;
+            }
           }
           continue;
         } else {
+          // Number mode: full number + corrected compact vs Intl compact
           primary = new Intl.NumberFormat(m.icuLocale).format(num);
-          secondary = new Intl.NumberFormat(m.icuLocale, { notation:'compact', compactDisplay:'short' }).format(num);
-          note = (NUM_DATA[code] && NUM_DATA[code].sep) || '';
+          const intlCompact = new Intl.NumberFormat(m.icuLocale, { notation:'compact', compactDisplay:'short' }).format(num);
+          const corrected = formatCompact(num, code);
+          const changed = intlCompact !== corrected;
+          const ov = COMPACT_OVERRIDES[code];
+          const badge = changed ? ' <span style="font-size:9px;background:#f59e0b;color:white;padding:1px 5px;border-radius:3px;font-family:var(--mono);letter-spacing:0.04em">OVERRIDE</span>' : '';
+          rows += `<tr class="fmt-row" style="${changed ? 'background:#fffbf0' : ''}">
+            <td class="fmt-market-cell">${m.flag} ${m.name}${badge}</td>
+            <td class="fmt-val">${primary}</td>
+            <td class="fmt-val">${corrected}</td>
+            <td class="fmt-note-cell" style="${changed ? 'color:#c0392b' : 'color:#27ae60'}">${changed ? `Intl: ${intlCompact}` : ov.touristNote ? (touristMode ? '✓ using K/M' : '✓') : '✓ Intl correct'}</td>
+          </tr>`;
+          if (code === 'kh' && touristMode) {
+            const khAmt = num;
+            const usdFmt = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',currencyDisplay:'narrowSymbol'}).format(khAmt/4100);
+            rows += `<tr class="fmt-row fmt-sub-row">
+              <td class="fmt-market-cell" style="padding-left:28px;opacity:0.7">↳ USD tourist price</td>
+              <td class="fmt-val" style="font-size:13px">${usdFmt}</td>
+              <td class="fmt-val-secondary"></td>
+              <td class="fmt-note-cell">÷ 4,100 KHR/USD · tourist mode</td>
+            </tr>`;
+          }
+          continue;
         }
       } catch(err) { primary = '(unsupported)'; }
       rows += `<tr class="fmt-row">
