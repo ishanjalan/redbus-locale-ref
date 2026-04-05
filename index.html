@@ -650,6 +650,9 @@ const MARKETS = {
     sep: ', (comma) thousands · . (period) decimal (South Asian grouping)',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
     timeFormat: '12h dominant',
+    timeTransport: '24h',
+    timeAmpm: 'AM / PM (uppercase, no periods)',
+    timeNote: 'Departure and arrival times on tickets should be 24h — IRCTC and every major Indian transport operator uses this, users expect it. 12h everywhere else (notifications, confirmations, copy).',
     timezone: 'IST (UTC+5:30)', dst: false,
     phone: '98765 43210', phoneCC: '+91 98765 43210',
     phoneRegex: '^\\+?91\\s?[6-9]\\d{4}\\s?\\d{5}$',
@@ -667,7 +670,10 @@ const MARKETS = {
     currencyNote: '$ alone is ambiguous. Always use S$ in UI.',
     sep: ', (comma) thousands · . (period) decimal',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
-    timeFormat: '12h common · 24h in transport/apps',
+    timeFormat: '12h common · 24h in transport',
+    timeTransport: '24h',
+    timeAmpm: 'AM / PM (uppercase, no periods)',
+    timeNote: 'MRT, bus, and airline schedules all use 24h — users are comfortable with it in transport contexts. 12h in consumer UI is fine. When in doubt, 24h is the safer default for any departure time.',
     timezone: 'SGT (UTC+8)', dst: false,
     phone: '8888 8888', phoneCC: '+65 8888 8888',
     phoneRegex: '^\\+?65\\s?\\d{4}\\s?\\d{4}$',
@@ -686,6 +692,9 @@ const MARKETS = {
     sep: ', (comma) thousands · . (period) decimal',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
     timeFormat: '12h dominant',
+    timeTransport: '24h',
+    timeAmpm: 'AM / PM (uppercase) · pagi / petang / malam in Bahasa',
+    timeNote: 'Bahasa colloquially uses pagi (morning), tengah hari (noon), petang (afternoon), malam (night) — but digital UI uses AM/PM. 24h on transport timetables is the norm and expected.',
     timezone: 'MYT (UTC+8)', dst: false,
     phone: '011 1234 5678', phoneCC: '+60 11 1234 5678',
     phoneRegex: '^\\+?60\\s?1\\d\\s?\\d{3,4}\\s?\\d{4}$',
@@ -704,6 +713,9 @@ const MARKETS = {
     sep: '. (period) thousands · , (comma) decimal',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
     timeFormat: '24h standard',
+    timeTransport: '24h',
+    timeAmpm: 'N/A — 24h throughout',
+    timeNote: '24h everywhere, including consumer UI. Colloquial Bahasa uses pagi/siang/sore/malam for time-of-day, but digital UI uses 24h numerals universally. No AM/PM disambiguation needed.',
     timezone: 'WIB (UTC+7) · WITA (UTC+8) · WIT (UTC+9)', dst: false,
     phone: '0812 3456 7890', phoneCC: '+62 812 3456 7890',
     phoneRegex: '^\\+?62\\s?8\\d{2}\\s?\\d{4}\\s?\\d{4}$',
@@ -721,7 +733,10 @@ const MARKETS = {
     currencyNote: '⚠ USD is widely used for most commercial transactions above ~$1. Bus tickets are frequently priced in USD. Your UI must handle both KHR and USD simultaneously.',
     sep: ', (comma) thousands · . (period) decimal',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
-    timeFormat: '12h colloquial · 24h in transport',
+    timeFormat: '12h dominant',
+    timeTransport: '12h',
+    timeAmpm: 'AM / PM (English) · ព្រឹក (morning) / ល្ងាច (evening) in Khmer',
+    timeNote: 'Unlike other SEA markets, 24h transport convention is less established in Cambodia. Use 12h throughout. Always pair time with weekday + date for disambiguation — do not show time alone.',
     timezone: 'ICT (UTC+7)', dst: false,
     phone: '088 888 8888', phoneCC: '+855 88 888 8888',
     phoneRegex: '^\\+?855\\s?\\d{2}\\s?\\d{3}\\s?\\d{4}$',
@@ -740,6 +755,9 @@ const MARKETS = {
     sep: '. (period) thousands · , (comma) decimal',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
     timeFormat: '24h standard',
+    timeTransport: '24h',
+    timeAmpm: 'N/A — 24h throughout',
+    timeNote: '24h is standard in all digital contexts including consumer UI. SA (sáng = morning) and CH (chiều = afternoon/evening) appear in some apps as shorthand but 24h numerals are the dominant and safe default.',
     timezone: 'ICT (UTC+7)', dst: false,
     phone: '0912 345 678', phoneCC: '+84 912 345 678',
     phoneRegex: '^\\+?84\\s?([35789])\\d{2}\\s?\\d{3}\\s?\\d{3}$',
@@ -757,7 +775,10 @@ const MARKETS = {
     currencyNote: 'Use COL$ only when currency must be disambiguated internationally.',
     sep: '. (period) thousands · , (comma) decimal',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
-    timeFormat: '12h',
+    timeFormat: '12h — always',
+    timeTransport: '12h — always',
+    timeAmpm: 'a. m. / p. m. (lowercase, with spaces — RAE standard)',
+    timeNote: '⚠ User research confirmed 24h reads as "military time" in Colombia — avoid it everywhere, including departure times. Disambiguation strategy: always anchor time to weekday + date (e.g. Mar, 5 abr · 8:15 p. m.). Make a. m./p. m. the same visual weight as the time itself — never mute or shrink it.',
     timezone: 'COT (UTC−5) · No DST', dst: false,
     phone: '300 1234567', phoneCC: '+57 300 1234567',
     phoneRegex: '^\\+?57\\s?3\\d{2}\\s?\\d{7}$',
@@ -775,7 +796,10 @@ const MARKETS = {
     currencyNote: 'Locals rarely use PEN except in banking/export contexts. "Sol" is the spoken name.',
     sep: ', (comma) thousands · . (period) decimal',
     dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
-    timeFormat: '12h',
+    timeFormat: '12h — always',
+    timeTransport: '12h — always',
+    timeAmpm: 'a. m. / p. m. (lowercase, with spaces — RAE standard)',
+    timeNote: '⚠ Same as Colombia — 24h is "hora militar" to Peruvian users. Use 12h everywhere. Disambiguation: weekday + date + prominent a. m./p. m. is sufficient. Do not use 24h even on departure times.',
     timezone: 'PET (UTC−5) · No DST', dst: false,
     phone: '999 123 456', phoneCC: '+51 999 123 456',
     phoneRegex: '^\\+?51\\s?9\\d{2}\\s?\\d{3}\\s?\\d{3}$',
@@ -1682,9 +1706,14 @@ function renderMarket() {
     <div id="tab-datetime" class="section ${activeTab==='datetime'?'active':''}">
       <div class="info-grid">
         <div class="info-card">
-          <div class="info-card-label">Time convention</div>
-          <div class="info-card-value">${m.timeFormat.includes('24')&&m.timeFormat.includes('12') ? '12h / 24h' : m.timeFormat.includes('24') ? '24h' : '12h'}</div>
-          <div class="info-card-sub">${m.timeFormat}</div>
+          <div class="info-card-label">Consumer UI</div>
+          <div class="info-card-value">${m.timeFormat.includes('24') && !m.timeFormat.includes('12') ? '24h' : '12h'}</div>
+          <div class="info-card-sub">${m.timeAmpm || 'AM / PM'}</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Departure / arrival times</div>
+          <div class="info-card-value" style="${m.timeTransport && m.timeTransport.includes('always') ? 'color:var(--red)' : ''}">${m.timeTransport || '24h'}</div>
+          <div class="info-card-sub">Timetables, tickets, search results</div>
         </div>
         <div class="info-card">
           <div class="info-card-label">Timezone</div>
@@ -1692,33 +1721,61 @@ function renderMarket() {
           <div class="info-card-sub">${m.timezone}</div>
         </div>
       </div>
+      ${m.timeNote ? `<div class="${m.timeNote.startsWith('⚠') ? 'warn-box' : 'device-alert'}" style="${!m.timeNote.startsWith('⚠') ? 'background:var(--surface2);border-color:var(--rule);color:var(--ink2)' : ''}">${m.timeNote}</div>` : ''}
+      <div class="table-wrap">
+        <div class="table-title">What to use where</div>
+        <table class="ref-table">
+          <tr><th>Context</th><th>Format</th><th>Example</th></tr>
+          <tr>
+            <td>Departure / arrival on ticket</td>
+            <td><strong>${m.timeTransport || '24h'}</strong></td>
+            <td class="example">${m.timeTransport && m.timeTransport.includes('12') ? (currentMarket==='co'||currentMarket==='pe' ? 'Mar, 5 abr · 8:15 p. m.' : 'Wed, 3 Sep · 8:15 PM') : 'Wed, 3 Sep · 20:15'}</td>
+          </tr>
+          <tr>
+            <td>Search result trip card</td>
+            <td><strong>${m.timeTransport || '24h'}</strong></td>
+            <td class="example">${m.timeTransport && m.timeTransport.includes('12') ? (currentMarket==='co'||currentMarket==='pe' ? '8:15 p. m. → 6:00 a. m.' : '8:15 PM → 6:00 AM') : '20:15 → 06:00'}</td>
+          </tr>
+          <tr>
+            <td>Notification / reminder copy</td>
+            <td>${m.timeFormat.includes('24') && !m.timeFormat.includes('12') ? '24h' : '12h'}</td>
+            <td class="example">${m.timeFormat.includes('24') && !m.timeFormat.includes('12') ? 'Viaje a las 20:15' : (currentMarket==='co'||currentMarket==='pe' ? 'Tu viaje sale a las 8:15 p. m.' : 'Your trip departs at 8:15 PM')}</td>
+          </tr>
+          <tr>
+            <td>Relative time (preferred)</td>
+            <td>Always safe</td>
+            <td class="example">${currentMarket==='co'||currentMarket==='pe' ? 'Sale en 2 horas' : currentMarket==='id' ? 'Berangkat dalam 2 jam' : currentMarket==='vn' ? 'Khởi hành sau 2 giờ' : 'Departs in 2 hours'}</td>
+          </tr>
+        </table>
+      </div>
       <div class="table-wrap">
         <div class="table-title">Date formats</div>
         <table class="ref-table">
           <tr><th>Format</th><th>Example</th><th>Use when</th></tr>
-          <tr><td>Primary (short)</td><td class="example">3 Sep</td><td class="note">Default in UI</td></tr>
-          <tr><td>Extended</td><td class="example">3 Sep 2025<br>Wed, 3 Sep</td><td class="note">Year ≠ current year / Calendar views</td></tr>
-          <tr><td>Range, same month</td><td class="example">3–4 Sep</td><td class="note">Multi-day trips</td></tr>
-          <tr><td>Range, cross-month</td><td class="example">3 Sep–4 Jan 2026</td><td class="note">Show year when crossing</td></tr>
+          <tr><td>Primary (short)</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '3 abr.' : '3 Sep'}</td><td class="note">Default in UI</td></tr>
+          <tr><td>Extended</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '3 abr. 2025 · mié., 3 abr.' : '3 Sep 2025 · Wed, 3 Sep'}</td><td class="note">Year ≠ current year / calendar views</td></tr>
+          <tr><td>Range, same month</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '3–4 abr.' : '3–4 Sep'}</td><td class="note">Multi-day trips</td></tr>
+          <tr><td>Range, cross-month</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '3 abr.–4 ene. 2026' : '3 Sep–4 Jan 2026'}</td><td class="note">Show year when crossing</td></tr>
         </table>
       </div>
       <div class="table-wrap">
-        <div class="table-title">Time formats</div>
+        <div class="table-title">Time format examples</div>
         <table class="ref-table">
           <tr><th>Format</th><th>24h</th><th>12h</th></tr>
-          <tr><td>Time only</td><td class="example">20:15</td><td class="example">8:15 PM</td></tr>
-          <tr><td>Time range</td><td class="example">20:15–00:15</td><td class="example">8:15 PM–12:15 AM</td></tr>
-          <tr><td>Compact (date·time)</td><td class="example">3 Sep · 20:15</td><td class="example">3 Sep · 8:15 PM</td></tr>
-          <tr><td>Extended</td><td class="example">Wed, 3 Sep 2025 · 20:15</td><td class="example">Wed, 3 Sep 2025 · 8:15 PM</td></tr>
+          <tr><td>Time only</td><td class="example">20:15</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '8:15 p. m.' : '8:15 PM'}</td></tr>
+          <tr><td>Range</td><td class="example">20:15–00:15</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '8:15 p. m.–12:15 a. m.' : '8:15 PM–12:15 AM'}</td></tr>
+          <tr><td>Date · time</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '3 abr. · 20:15' : '3 Sep · 20:15'}</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? '3 abr. · 8:15 p. m.' : '3 Sep · 8:15 PM'}</td></tr>
+          <tr><td>Full</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? 'mié., 3 abr. 2025 · 20:15' : 'Wed, 3 Sep 2025 · 20:15'}</td><td class="example">${currentMarket==='co'||currentMarket==='pe' ? 'mié., 3 abr. 2025 · 8:15 p. m.' : 'Wed, 3 Sep 2025 · 8:15 PM'}</td></tr>
         </table>
       </div>
       <div class="table-wrap">
         <div class="table-title">Rules</div>
         <table class="ref-table">
-          <tr><td>AM/PM</td><td>Always uppercase. No periods (PM not P.M.)</td></tr>
-          <tr><td>Timezone in UI</td><td>Only when cross-timezone context is needed. Use abbreviation: SGT, WIB, ICT, COT, PET</td></tr>
-          <tr><td>DST</td><td>${m.dst ? '⚠ Observed — handle clock changes' : 'Not observed — no DST offset changes'} ${currentMarket==='co'||currentMarket==='pe' ? '· <strong>Note: Colombia/Peru do not observe DST — affects timestamp arithmetic</strong>' : ''}</td></tr>
-          <tr><td>Numeric dates</td><td>Avoid — dd/mm/yyyy vs mm/dd/yyyy ambiguity. Use "3 Sep" format.</td></tr>
+          <tr><td>AM/PM style</td><td>${m.timeAmpm || 'AM / PM (uppercase, no periods)'}</td></tr>
+          <tr><td>Timezone in UI</td><td>Only when cross-timezone context is needed. Use abbreviation: ${m.timezone.split('·')[0].trim().split(' ')[0]}</td></tr>
+          <tr><td>DST</td><td>${m.dst ? '⚠ Observed — handle clock changes in server-side timestamp logic' : 'Not observed — no clock change offsets to handle'}</td></tr>
+          <tr><td>Numeric dates</td><td>Avoid — dd/mm/yyyy vs mm/dd/yyyy is ambiguous globally. Use "3 Sep" format.</td></tr>
+          <tr><td>Month names</td><td>${currentMarket==='co'||currentMarket==='pe' ? 'Lowercase in Spanish — "abr." not "Abr." Never apply text-transform: capitalize to date strings.' : 'Standard casing per locale. Never force text-transform on date strings.'}</td></tr>
         </table>
       </div>
       ${renderCalendarSection(currentMarket)}
