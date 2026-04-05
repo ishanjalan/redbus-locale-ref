@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>redBus · International Locale Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #D0021B;
+    --red-dim: #f7e5e7;
+    --ink: #111;
+    --ink2: #444;
+    --ink3: #777;
+    --rule: #e5e5e5;
+    --bg: #f9f8f6;
+    --surface: #ffffff;
+    --surface2: #f4f3f0;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --india: #FF9933;
+    --india-dim: #fff7ee;
+    --covered: #d4edda;
+    --covered-text: #1a5c2a;
+    --missing: #fde8e8;
+    --missing-text: #8b1a1a;
+    --partial: #fff3cd;
+    --partial-text: #7a4f00;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: white;
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 52px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.01em;
+  }
+
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--red);
+    border-radius: 50%;
+  }
+
+  .logo-sep { color: #555; margin: 0 4px; }
+
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #888;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── LAYOUT ── */
+  .shell {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 52px);
+  }
+
+  /* ── SIDEBAR ── */
+  nav {
+    background: var(--surface);
+    border-right: 1px solid var(--rule);
+    padding: 1.5rem 0;
+    position: sticky;
+    top: 52px;
+    height: calc(100vh - 52px);
+    overflow-y: auto;
+  }
+
+  .nav-section {
+    padding: 0 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .nav-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--ink3);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    padding-left: 0.5rem;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--ink2);
+    font-size: 13px;
+    transition: background 0.12s, color 0.12s;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: var(--sans);
+  }
+
+  .nav-item:hover { background: var(--surface2); color: var(--ink); }
+  .nav-item.active { background: var(--red-dim); color: var(--red); font-weight: 500; }
+
+  .nav-item.india-btn { border-top: 1px solid var(--rule); margin-top: 0.5rem; padding-top: 0.75rem; }
+
+  .flag { font-size: 16px; line-height: 1; }
+
+  .compare-toggle {
+    margin: 0 1.25rem;
+    margin-top: 1rem;
+    padding: 10px 12px;
+    background: var(--india-dim);
+    border: 1px solid #f0d5b0;
+    border-radius: 8px;
+  }
+
+  .compare-toggle label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #7a4f00;
+    font-weight: 500;
+  }
+
+  .compare-toggle input[type=checkbox] { accent-color: var(--india); }
+
+  /* ── MAIN ── */
+  main {
+    padding: 2rem 2.5rem;
+    max-width: 960px;
+  }
+
+  /* ── PAGE HEADER ── */
+  .page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .page-header .sub {
+    color: var(--ink3);
+    font-size: 13px;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 2rem;
+  }
+
+  .tab {
+    padding: 8px 18px;
+    font-size: 13px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--ink3);
+    font-family: var(--sans);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.12s, border-color 0.12s;
+  }
+
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--red); border-bottom-color: var(--red); font-weight: 500; }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── INDIA COMPARE STRIP ── */
+  .india-strip {
+    display: none;
+    background: var(--india-dim);
+    border: 1px solid #f0d5b0;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .india-strip.visible { display: block; }
+
+  .india-strip-header {
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    color: #a06020;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+
+  .india-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .india-cell {
+    background: white;
+    border-radius: 6px;
+    padding: 8px 10px;
+    border: 1px solid #f0d5b0;
+  }
+
+  .india-cell-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    color: #a06020;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+  }
+
+  .india-cell-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .india-cell-sub {
+    font-size: 11px;
+    color: var(--ink3);
+    margin-top: 2px;
+  }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .info-card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+  }
+
+  .info-card-label {
+    font-size: 10px;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    color: var(--ink3);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-card-value {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    font-family: var(--mono);
+  }
+
+  .info-card-sub {
+    font-size: 12px;
+    color: var(--ink3);
+    margin-top: 4px;
+  }
+
+  .info-card-note {
+    font-size: 11px;
+    color: var(--ink3);
+    background: var(--surface2);
+    border-radius: 5px;
+    padding: 5px 8px;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  /* ── TABLE ── */
+  .ref-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .ref-table th {
+    text-align: left;
+    font-size: 10px;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink3);
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--rule);
+    font-weight: 400;
+  }
+
+  .ref-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table tr:hover td { background: var(--surface2); }
+
+  .ref-table .mono { font-family: var(--mono); font-size: 12px; }
+
+  .ref-table .example {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .ref-table .note {
+    font-size: 11px;
+    color: var(--ink3);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .table-title {
+    padding: 10px 12px;
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: 0.06em;
+    color: var(--ink3);
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface2);
+  }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-weight: 500;
+  }
+
+  .badge-covered { background: var(--covered); color: var(--covered-text); }
+  .badge-missing { background: var(--missing); color: var(--missing-text); }
+  .badge-partial { background: var(--partial); color: var(--partial-text); }
+  .badge-india { background: var(--india-dim); color: #8a5000; border: 1px solid #f0d5b0; }
+
+  /* ── FONT SECTION ── */
+  .font-stack {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+
+  .font-row {
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--rule);
+    gap: 1rem;
+  }
+
+  .font-row:last-child { border-bottom: none; }
+
+  .font-script-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .font-script-sub {
+    font-size: 11px;
+    color: var(--ink3);
+    margin-top: 1px;
+  }
+
+  .font-sample {
+    font-size: 18px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+
+  /* ── CODE BLOCK ── */
+  .code-block {
+    background: #1a1a1a;
+    color: #e8e8e8;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+  }
+
+  .code-block .cm { color: #666; }
+  .code-block .ck { color: #c5a5f5; }
+  .code-block .cs { color: #86d9b2; }
+  .code-block .cn { color: #f4a261; }
+
+  /* ── PHONE REGEX ── */
+  .regex-cell {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink3);
+    word-break: break-all;
+    line-height: 1.5;
+  }
+
+  /* ── DIFF HIGHLIGHT ── */
+  .diff-same { color: var(--ink3); }
+  .diff-diff { color: var(--red); font-weight: 500; }
+
+  /* ── LOCALE CODE TAG ── */
+  .locale-tag {
+    display: inline-block;
+    background: var(--surface2);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 1px 6px;
+    color: var(--ink2);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .shell { grid-template-columns: 1fr; }
+    nav { display: none; }
+    .info-grid { grid-template-columns: 1fr; }
+    main { padding: 1rem; }
+  }
+
+
+  .num-right { color: #1a5c2a; font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+  .num-wrong { color: #c0392b; font-family: 'DM Mono', monospace; font-size: 13px; text-decoration: line-through; }
+  .os-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .os-label { font-size: 12px; color: var(--ink2); min-width: 140px; }
+  .os-track { flex: 1; background: var(--surface2); border-radius: 3px; height: 20px; overflow: hidden; }
+  .os-fill { height: 100%; border-radius: 3px; display: flex; align-items: center; padding: 0 8px; }
+  .os-pct { font-size: 11px; font-weight: 500; color: white; white-space: nowrap; }
+  .device-alert { background: #fff8e6; border: 1px solid #f0c66e; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #7a4f00; margin-bottom: 1rem; line-height: 1.6; }
+  .payment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 10px; padding: 12px; background: var(--surface); }
+  .payment-card { background: var(--surface2); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; }
+  .payment-name { font-weight: 500; font-size: 13px; color: var(--ink); }
+  .payment-type { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+  .payment-rank { font-size: 10px; margin-top: 6px; padding: 2px 7px; border-radius: 3px; display: inline-block; font-family: 'DM Mono', monospace; }
+  .rank-1 { background: #fef3c7; color: #92400e; }
+  .rank-2 { background: var(--surface2); color: var(--ink3); border: 1px solid var(--rule); }
+
+  /* ── ANIMATIONS ── */
+  .section.active { animation: fadein 0.18s ease; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  /* ── TAB SCROLL (prevents wrap on narrow screens) ── */
+  .tabs { overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { white-space: nowrap; flex-shrink: 0; }
+
+  /* ── MOBILE MARKET SELECT ── */
+  .mobile-market-select { display: none; padding: 0.75rem 1rem; border-bottom: 1px solid var(--rule); background: var(--surface); }
+  .mobile-market-select select { width: 100%; padding: 8px 10px; border: 1px solid var(--rule); border-radius: 6px; font-family: var(--sans); font-size: 14px; background: var(--bg); color: var(--ink); }
+  @media (max-width: 700px) { .mobile-market-select { display: block; } }
+
+  /* ── MESSAGING TAB ── */
+  .msg-app-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; padding: 12px; background: var(--surface); }
+  .msg-app-card { background: var(--surface2); border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px; }
+  .msg-app-name { font-weight: 500; font-size: 13px; color: var(--ink); }
+  .msg-app-share { font-size: 11px; color: var(--ink3); margin-top: 2px; }
+  .msg-app-note { font-size: 11px; color: var(--ink2); margin-top: 6px; line-height: 1.5; }
+  .warn-box { background: #fff8e6; border: 1px solid #f0c66e; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: #7a4f00; margin-bottom: 1rem; line-height: 1.6; }
+
+  /* ── ADDRESS FORMAT ── */
+  .addr-example { font-family: var(--mono); font-size: 12px; background: var(--surface2); border-radius: 6px; padding: 8px 10px; margin: 6px 0; line-height: 1.6; color: var(--ink); }
+  .addr-field { display: inline-block; background: var(--red-dim); color: var(--red); font-size: 10px; font-family: var(--mono); padding: 1px 5px; border-radius: 3px; margin: 1px; }
+
+  /* ── TEXT EXPANSION ── */
+  .expansion-bar-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .expansion-bar { height: 18px; border-radius: 3px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 500; color: white; white-space: nowrap; min-width: 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    redBus <span class="logo-sep">/</span> International Locale Reference
+  </div>
+  <div class="header-meta">Design + DesignOps · v1.1 · Apr 2026</div>
+</header>
+
+<div class="shell">
+
+<!-- ── SIDEBAR ── -->
+<nav>
+  <div class="nav-section">
+    <div class="nav-label">SEA</div>
+    <button class="nav-item active" data-market="sg" onclick="selectMarket('sg', event)"><span class="flag">🇸🇬</span> Singapore</button>
+    <button class="nav-item" data-market="my" onclick="selectMarket('my', event)"><span class="flag">🇲🇾</span> Malaysia</button>
+    <button class="nav-item" data-market="id" onclick="selectMarket('id', event)"><span class="flag">🇮🇩</span> Indonesia</button>
+    <button class="nav-item" data-market="kh" onclick="selectMarket('kh', event)"><span class="flag">🇰🇭</span> Cambodia</button>
+    <button class="nav-item" data-market="vn" onclick="selectMarket('vn', event)"><span class="flag">🇻🇳</span> Vietnam</button>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">LatAm</div>
+    <button class="nav-item" data-market="co" onclick="selectMarket('co', event)"><span class="flag">🇨🇴</span> Colombia</button>
+    <button class="nav-item" data-market="pe" onclick="selectMarket('pe', event)"><span class="flag">🇵🇪</span> Peru</button>
+  </div>
+  <div class="compare-toggle">
+    <label>
+      <input type="checkbox" id="compareToggle" onchange="toggleIndia()">
+      Compare with 🇮🇳 India
+    </label>
+  </div>
+</nav>
+
+<!-- ── MOBILE MARKET SELECT ── -->
+<div class="mobile-market-select">
+  <select onchange="selectMarketFromSelect(this.value)">
+    <optgroup label="SEA">
+      <option value="sg">🇸🇬 Singapore</option>
+      <option value="my">🇲🇾 Malaysia</option>
+      <option value="id">🇮🇩 Indonesia</option>
+      <option value="kh">🇰🇭 Cambodia</option>
+      <option value="vn">🇻🇳 Vietnam</option>
+    </optgroup>
+    <optgroup label="LatAm">
+      <option value="co">🇨🇴 Colombia</option>
+      <option value="pe">🇵🇪 Peru</option>
+    </optgroup>
+  </select>
+</div>
+
+<!-- ── MAIN ── -->
+<main id="main"></main>
+
+</div>
+
+<script>
+const INDIA = {
+  name: 'India', flag: '🇮🇳',
+  locale: 'en-IN', currency: 'INR',
+  currencySymbol: '₹', currencyPosition: 'Prefix, no space',
+  currencyExample: '₹1,23,456', currencySep: '. (period) = thousands, , (comma) = decimal',
+  dateFormat: 'DD MMM YYYY', timeFormat: '12h dominant', timezone: 'IST (UTC+5:30)',
+  phone: '+91 98765 43210', phoneRegex: '^\\+?91\\s?[6-9]\\d{4}\\s?\\d{5}$',
+  script: 'Latin (English UI) + Devanagari, Tamil, Telugu, Kannada, Malayalam for regional',
+  fonts: 'Inter (Latin), Noto Sans Devanagari, Noto Sans Tamil, Noto Sans Telugu etc.',
+  twelveHour: true, dstObserved: false, usdUsed: false,
+  notes: 'Lakh/crore numbering system (1,00,000 = 1 lakh). ₹ universally recognised.',
+};
+
+const MARKETS = {
+  sg: {
+    name: 'Singapore', flag: '🇸🇬', locale: 'en-SG', currency: 'SGD',
+    currencySymbol: 'S$', currencyPosition: 'Prefix, no space',
+    currencyExample: 'S$1,234.56',
+    currencyNote: '$ alone is ambiguous. Always use S$ in UI.',
+    sep: ', (comma) thousands · . (period) decimal',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '12h common · 24h in transport/apps',
+    timezone: 'SGT (UTC+8)', dst: false,
+    phone: '8888 8888', phoneCC: '+65 8888 8888',
+    phoneRegex: '^\\+?65\\s?\\d{4}\\s?\\d{4}$',
+    script: 'Latin (English UI)',
+    fonts: 'Inter · Noto Sans SC (Mandarin, 30%) · Noto Sans Tamil (Tamil, 4%)',
+    fontGap: ['Mandarin Simplified', 'Tamil'],
+    notes: 'English is the working language of digital products. Mandarin and Tamil localisation is a gap for significant user segments.',
+    usdUsed: false, usdNote: null,
+    icuLocale: 'en-SG', icuCurrency: 'SGD',
+  },
+  my: {
+    name: 'Malaysia', flag: '🇲🇾', locale: 'ms-MY', currency: 'MYR',
+    currencySymbol: 'RM', currencyPosition: 'Prefix, no space',
+    currencyExample: 'RM1,234.56',
+    currencyNote: '"MYR" used only for banking or international documents.',
+    sep: ', (comma) thousands · . (period) decimal',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '12h dominant',
+    timezone: 'MYT (UTC+8)', dst: false,
+    phone: '011 1234 5678', phoneCC: '+60 11 1234 5678',
+    phoneRegex: '^\\+?60\\s?1\\d\\s?\\d{3,4}\\s?\\d{4}$',
+    script: 'Latin (Bahasa Melayu UI)',
+    fonts: 'Inter · Noto Sans SC (Mandarin, 23%) · Noto Sans Tamil (Tamil, 7%)',
+    fontGap: ['Mandarin Simplified', 'Tamil'],
+    notes: 'Bahasa Melayu uses Latin script — Inter covers it fully. Significant Chinese and Tamil communities are underserved by Latin-only UI.',
+    usdUsed: false, usdNote: null,
+    icuLocale: 'ms-MY', icuCurrency: 'MYR',
+  },
+  id: {
+    name: 'Indonesia', flag: '🇮🇩', locale: 'id-ID', currency: 'IDR',
+    currencySymbol: 'Rp', currencyPosition: 'Prefix, no space',
+    currencyExample: 'Rp1.234.567 · Rp25.000',
+    currencyNote: 'Never use "IDR" in local UI. IDR has no meaningful subunit — avoid decimals.',
+    sep: '. (period) thousands · , (comma) decimal',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '24h standard',
+    timezone: 'WIB (UTC+7) · WITA (UTC+8) · WIT (UTC+9)', dst: false,
+    phone: '0812 3456 7890', phoneCC: '+62 812 3456 7890',
+    phoneRegex: '^\\+?62\\s?8\\d{2}\\s?\\d{4}\\s?\\d{4}$',
+    script: 'Latin (Bahasa Indonesia UI)',
+    fonts: 'Inter — full coverage',
+    fontGap: [],
+    notes: 'Bahasa Indonesia is the universal digital lingua franca. Regional L1s (Javanese 32%, Sundanese 16%) are not used in UI. Indonesia has 3 timezones — use WIB for most routes.',
+    usdUsed: false, usdNote: null,
+    icuLocale: 'id-ID', icuCurrency: 'IDR',
+  },
+  kh: {
+    name: 'Cambodia', flag: '🇰🇭', locale: 'km-KH', currency: 'KHR',
+    currencySymbol: '៛', currencyPosition: 'Suffix with space',
+    currencyExample: '1,234,567 ៛ · 12,000 ៛',
+    currencyNote: '⚠ USD is widely used for most commercial transactions above ~$1. Bus tickets are frequently priced in USD. Your UI must handle both KHR and USD simultaneously.',
+    sep: ', (comma) thousands · . (period) decimal',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '12h colloquial · 24h in transport',
+    timezone: 'ICT (UTC+7)', dst: false,
+    phone: '088 888 8888', phoneCC: '+855 88 888 8888',
+    phoneRegex: '^\\+?855\\s?\\d{2}\\s?\\d{3}\\s?\\d{4}$',
+    script: 'Khmer script (km-KH)',
+    fonts: 'Noto Sans Khmer — required. Inter has zero Khmer coverage.',
+    fontGap: ['Khmer (primary script — critical)'],
+    notes: 'Khmer script has complex stacking consonants. Line-height must be increased to ~1.8–2× Latin. Khmer numerals (០–៩) exist but Arabic numerals are widely used in digital UI.',
+    usdUsed: true, usdNote: 'USD widely used alongside KHR. Threshold: amounts above ~4,000–5,000 ៛ (~$1) often quoted in USD in commercial contexts.',
+    icuLocale: 'km-KH', icuCurrency: 'KHR',
+  },
+  vn: {
+    name: 'Vietnam', flag: '🇻🇳', locale: 'vi-VN', currency: 'VND',
+    currencySymbol: '₫', currencyPosition: 'Suffix with space',
+    currencyExample: '1.234.567 ₫ · 120.000 ₫',
+    currencyNote: 'VND has no meaningful subunit — never show decimals. Dong has no subunit.',
+    sep: '. (period) thousands · , (comma) decimal',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '24h standard',
+    timezone: 'ICT (UTC+7)', dst: false,
+    phone: '0912 345 678', phoneCC: '+84 912 345 678',
+    phoneRegex: '^\\+?84\\s?([35789])\\d{2}\\s?\\d{3}\\s?\\d{3}$',
+    script: 'Latin + Vietnamese diacritics',
+    fonts: 'Inter — covers Vietnamese. Verify stacked diacritics at small sizes and in bold.',
+    fontGap: [],
+    notes: 'Vietnamese uses Latin + extensive tone diacritics. Stacked diacritics (ắ, ặ, ướ) must be tested at 12–14px and in SemiBold/Bold. Text expands ~15–20% vs English.',
+    usdUsed: false, usdNote: null,
+    icuLocale: 'vi-VN', icuCurrency: 'VND',
+  },
+  co: {
+    name: 'Colombia', flag: '🇨🇴', locale: 'es-CO', currency: 'COP',
+    currencySymbol: '$', currencyPosition: 'Prefix, no space',
+    currencyExample: '$1.234.567,89',
+    currencyNote: 'Use COL$ only when currency must be disambiguated internationally.',
+    sep: '. (period) thousands · , (comma) decimal',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '12h',
+    timezone: 'COT (UTC−5) · No DST', dst: false,
+    phone: '300 1234567', phoneCC: '+57 300 1234567',
+    phoneRegex: '^\\+?57\\s?3\\d{2}\\s?\\d{7}$',
+    script: 'Latin (Spanish UI)',
+    fonts: 'Inter — full coverage',
+    fontGap: [],
+    notes: 'Colombian Spanish uses period as thousands separator and comma as decimal — opposite of most SEA markets. Colombia does not observe DST, which affects timestamp arithmetic year-round.',
+    usdUsed: false, usdNote: null,
+    icuLocale: 'es-CO', icuCurrency: 'COP',
+  },
+  pe: {
+    name: 'Peru', flag: '🇵🇪', locale: 'es-PE', currency: 'PEN',
+    currencySymbol: 'S/', currencyPosition: 'Prefix, space',
+    currencyExample: 'S/ 1,234.56',
+    currencyNote: 'Locals rarely use PEN except in banking/export contexts. "Sol" is the spoken name.',
+    sep: ', (comma) thousands · . (period) decimal',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '12h',
+    timezone: 'PET (UTC−5) · No DST', dst: false,
+    phone: '999 123 456', phoneCC: '+51 999 123 456',
+    phoneRegex: '^\\+?51\\s?9\\d{2}\\s?\\d{3}\\s?\\d{3}$',
+    script: 'Latin (Spanish UI)',
+    fonts: 'Inter — full coverage',
+    fontGap: [],
+    notes: 'Peru uses comma as thousands separator and period as decimal — same pattern as Singapore/Malaysia, opposite to Colombia/Vietnam/Indonesia. 13% of population speaks Quechua (Latin script, Inter covers it) — relevant for rural route accessibility.',
+    usdUsed: false, usdNote: null,
+    icuLocale: 'es-PE', icuCurrency: 'PEN',
+  },
+};
+
+let currentMarket = 'sg';
+let showIndia = false;
+
+function selectMarket(code, e) {
+  currentMarket = code;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  if (e && e.currentTarget) e.currentTarget.classList.add('active');
+  const sel = document.querySelector('.mobile-market-select select');
+  if (sel) sel.value = code;
+  renderMarket();
+}
+
+function selectMarketFromSelect(code) {
+  currentMarket = code;
+  document.querySelectorAll('.nav-item').forEach(b => {
+    b.classList.toggle('active', b.dataset.market === code);
+  });
+  renderMarket();
+}
+
+function toggleIndia() {
+  showIndia = document.getElementById('compareToggle').checked;
+  renderMarket();
+}
+
+function diff(intlVal, indiaVal) {
+  if (intlVal === indiaVal) return `<span class="diff-same">${intlVal}</span>`;
+  return `<span class="diff-diff">${intlVal}</span>`;
+}
+
+
+// ── NUMBER FORMATTING DATA ──
+const NUM_DATA = {
+  sg: { sep:'comma/period', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'K',m:'M',ex:['S$1.2K','S$4.5M'],note:'English abbreviations. Uppercase K/M.'}, ordinal:{ex:['1st','2nd','3rd','4th'],note:'Standard English ordinals.'}, neg:{ex:['-S$12.50','(S$12.50)'],note:'Minus prefix preferred. Parentheses for accounting only.'}, frac:{ex:['1.5 hrs','0.5 km'],note:'Decimals over fractions.'} },
+  my: { sep:'comma/period', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'K',m:'M',ex:['RM1.2K','RM4.5M'],note:'English abbreviations used in digital UI.'}, ordinal:{ex:['1st','2nd','3rd'],note:'English ordinals standard.'}, neg:{ex:['-RM12.50'],note:'Minus prefix.'}, frac:{ex:['1.5 jam','0.5 km'],note:'Decimal notation standard.'} },
+  id: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %','15 persen'],pos:'suffix, no space'}, abbr:{k:'rb',m:'jt',ex:['Rp1,2rb','Rp4,5jt'],note:'"rb" = ribu (thousand), "jt" = juta (million). Never use K/M.'}, ordinal:{ex:['ke-1','ke-2','ke-3'],note:'Use "ke-" prefix. Never 1st/2nd.'}, neg:{ex:['-Rp12.500'],note:'Minus prefix. Period as thousands separator.'}, frac:{ex:['1,5 jam','0,5 km'],note:'Comma as decimal — critical for data entry fields.'} },
+  kh: { sep:'comma/period', pct:{ex:['15%'],wrong:[],pos:'suffix, no space'}, abbr:{k:'ពាន់',m:'លាន',ex:['1,2ពាន់ ៛','4,5លាន ៛'],note:'Khmer words for thousand/million. Arabic numerals standard in digital UI.'}, ordinal:{ex:['ទី1','ទី2','ទី3'],note:'Khmer ordinals use ទី prefix.'}, neg:{ex:['-1,234 ៛','-$12.50'],note:'Negative rare in booking UI. Minus prefix.'}, frac:{ex:['1.5 ម៉ោង','0.5 គីឡូ'],note:'Period as decimal in Khmer digital UI.'} },
+  vn: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'nghìn',m:'triệu',ex:['120 nghìn ₫','1,2 triệu ₫'],note:'Vietnamese words standard. K/M acceptable in very informal UI only.'}, ordinal:{ex:['1.','thứ 1','thứ nhất'],note:'Period after number (1.) or "thứ" prefix for formal.'}, neg:{ex:['-120.000 ₫'],note:'Minus prefix. Period as thousands separator.'}, frac:{ex:['1,5 giờ','0,5 km'],note:'Comma as decimal in Vietnamese.'} },
+  co: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['$1,2 mil','$4,5 millones'],note:'"mil" not K. "millones" not M. Very different from SEA.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Spanish ordinals use degree symbol. "primero/segundo" for formal.'}, neg:{ex:['-$1.234.567'],note:'Minus prefix. Period as thousands, comma as decimal.'}, frac:{ex:['1,5 horas','0,5 km'],note:'Comma as decimal.'} },
+  pe: { sep:'comma/period', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['S/ 1,200','S/ 4,500'],note:'Write full number or "mil". Not K/M.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Same as Colombian Spanish.'}, neg:{ex:['-S/ 1,234.56'],note:'Minus prefix. Comma thousands, period decimal.'}, frac:{ex:['1.5 horas','0.5 km'],note:'Period as decimal (different from Colombia).'} },
+};
+
+// ── NAME / FORM DATA ──
+const NAME_DATA = {
+  sg: { order:'Western (Given · Family)', example:'James Tan', singleName:false, familyFirst:false, honorifics:'Mr, Mrs, Ms, Dr — standard English', formNotes:['Chinese names may be 2–3 characters. Chinese Singaporeans often have both a Chinese name and an English name on the same ID.','Malay names: given name + bin/binti + father\'s name. "bin" (son of), "binti" (daughter of). No family surname.','Indian Tamil names: given name + father\'s name. No shared family surname.','Always allow long name fields — minimum 60 chars. Validate only on empty, not format.'], idTypes:['NRIC (Singapore IC)','FIN (Foreigner ID)','Passport'] },
+  my: { order:'Western for Chinese · Patronymic for Malays', example:'Ahmad bin Abdullah · Tan Wei Ming', singleName:false, familyFirst:false, honorifics:'Encik (Mr), Cik (Miss), Puan (Mrs) in Malay; Mr/Mrs in English contexts', formNotes:['Malay names use patronymic: given name + bin/binti + father\'s name. A required last-name field will confuse ~50% of users.','Chinese Malaysian names follow Western order. Many have both Chinese and English given names.','Indian Malaysian names: similar patronymic to Malay. No family surname.','Consider a single "Full Name" field + optional "Preferred Name" rather than separate First/Last.'], idTypes:['MyKad (IC)','MyPR','Passport'] },
+  id: { order:'Single name common · Western when two names exist', example:'Suharto · Joko Widodo', singleName:true, familyFirst:false, honorifics:'Bapak/Pak (Mr), Ibu/Bu (Mrs/Ms)', formNotes:['⚠ CRITICAL: ~15–20% of Indonesians legally have one name only (mononymous). A required "Last Name" field will block them from completing checkout.','Make last name optional, or use a single "Full Name" field.','Names can be very long — Batak names especially. Allow 80+ chars.','Many Indonesians go by a shortened nickname. A "Preferred Name / Panggilan" field adds value.'], idTypes:['KTP (National ID)','SIM (Driving Licence)','Passport'] },
+  kh: { order:'Family name first, then given name', example:'Chan Dara (family: Chan, given: Dara)', singleName:false, familyFirst:true, honorifics:'លោក (Lok) = Mr, លោកស្រី (Lok Srey) = Mrs/Ms', formNotes:['Family name comes first in Khmer order. Western-style forms that label the first field "First Name" will cause frequent errors.','In international/English contexts, Cambodians often reverse to Western order. Clarify which order your form expects, inline.','Romanisation of Khmer names is inconsistent — the same name may be spelled differently across ID documents.','Honorifics are culturally important. Consider a Title/Honorific dropdown.'], idTypes:['National ID Card','Passport','Family Book (Livret de Famille)'] },
+  vn: { order:'Family · Middle · Given (Nguyễn Văn An)', example:'Nguyễn Văn An — family name is Nguyễn', singleName:false, familyFirst:true, honorifics:'Anh (older male), Chị (older female), Em (younger), Ông (elderly male), Bà (elderly female)', formNotes:['Vietnamese names are family-name-first. Nguyễn Văn An: Nguyễn = family, Văn = middle, An = given name.','When addressed, Vietnamese use the given name (An), not the family name. Consider a "What should we call you?" field.','~40% of Vietnamese population shares the family name Nguyễn. Last name alone is not a useful identifier.','Full Vietnamese name with diacritics must be preserved exactly. Do not strip diacritics — names become legally incorrect.','Allow 80+ chars total.'], idTypes:['CCCD (Citizen ID card)','CMND (Old format ID)','Passport'] },
+  co: { order:'Given · (Middle) · Paternal surname · Maternal surname', example:'María García López (two surnames)', singleName:false, familyFirst:false, honorifics:'Señor (Sr), Señora (Sra), Señorita (Srta)', formNotes:['Colombians typically have two surnames: paternal + maternal. A single "Last Name" field may frustrate users.','Full legal name includes both surnames. Booking name must match ID — use the full double surname.','Middle names are common. Name fields must accommodate 4+ words.','Allow 100+ chars total for name fields.'], idTypes:['Cédula de Ciudadanía','Pasaporte','Cédula de Extranjería'] },
+  pe: { order:'Given · (Middle) · Paternal surname · Maternal surname', example:'Carlos Quispe Mamani (two surnames)', singleName:false, familyFirst:false, honorifics:'Señor (Sr), Señora (Sra)', formNotes:['Same double-surname structure as Colombia.','Indigenous Peruvian names (Quechua/Aymara origin): Quispe, Mamani, Condori are extremely common. Forms must not reject these.','Booking name must match DNI exactly. Quechua names sometimes differ between informal usage and official ID spelling.','Allow 100+ chars total.'], idTypes:['DNI (National ID)','Carné de Extranjería','Pasaporte'] },
+};
+
+// ── PAYMENT DATA ──
+const PAYMENT_DATA = {
+  sg: [ {name:'PayNow',type:'Instant bank transfer (national)',rank:1},{name:'GrabPay',type:'E-wallet (Grab)',rank:1},{name:'Visa / Mastercard',type:'Credit & Debit card',rank:1},{name:'NETS',type:'Local debit network',rank:2},{name:'Apple Pay / Google Pay',type:'Mobile wallet',rank:2},{name:'PayLah!',type:'DBS mobile wallet',rank:2} ],
+  my: [ {name:'DuitNow',type:'Instant bank transfer (national)',rank:1},{name:"Touch 'n Go eWallet",type:'E-wallet (dominant)',rank:1},{name:'GrabPay',type:'E-wallet (Grab)',rank:1},{name:'Visa / Mastercard',type:'Credit & Debit card',rank:1},{name:'FPX',type:'Online banking gateway',rank:2},{name:'Boost',type:'E-wallet',rank:2},{name:'ShopeePay',type:'E-wallet (Shopee)',rank:2} ],
+  id: [ {name:'GoPay',type:'E-wallet (Gojek)',rank:1},{name:'OVO',type:'E-wallet (Grab/Lippo)',rank:1},{name:'DANA',type:'E-wallet',rank:1},{name:'ShopeePay',type:'E-wallet (Shopee)',rank:1},{name:'QRIS',type:'Universal QR standard',rank:1},{name:'Virtual Account',type:'Bank transfer (BCA, Mandiri, BRI, BNI)',rank:1},{name:'Alfamart / Indomaret',type:'Convenience store cash payment',rank:2},{name:'Visa / Mastercard',type:'Credit card (lower penetration)',rank:2} ],
+  kh: [ {name:'ABA Pay',type:'ABA Bank mobile payment',rank:1},{name:'Wing',type:'Mobile money (WING)',rank:1},{name:'KHQR',type:'National QR standard',rank:1},{name:'USD cash / e-payment',type:'USD widely used commercially',rank:1},{name:'Pi Pay',type:'E-wallet',rank:2},{name:'Visa / Mastercard',type:'Credit card',rank:2} ],
+  vn: [ {name:'MoMo',type:'E-wallet (dominant)',rank:1},{name:'ZaloPay',type:'E-wallet (Zalo/Tencent)',rank:1},{name:'VNPay QR',type:'Payment gateway & QR',rank:1},{name:'Bank transfer (Napas)',type:'Online banking / ATM',rank:1},{name:'ShopeePay',type:'E-wallet (Shopee)',rank:2},{name:'Visa / Mastercard',type:'Credit card (lower penetration)',rank:2},{name:'Cash on delivery',type:'COD — still significant for low-trust users',rank:2} ],
+  co: [ {name:'Nequi',type:'E-wallet (Bancolombia) — ~54% penetration',rank:1},{name:'Daviplata',type:'E-wallet (Davivienda) — ~22% penetration',rank:1},{name:'Bre-B',type:'Central bank instant payment rail (launched Sept 2025)',rank:1},{name:'PSE',type:'Online bank transfer gateway',rank:1},{name:'Visa / Mastercard',type:'Credit & Debit card',rank:1},{name:'Efecty',type:'Cash payment at agent',rank:2},{name:'Bancolombia transfer',type:'Direct bank transfer',rank:2} ],
+  pe: [ {name:'Yape',type:'E-wallet (BCP bank) — dominant',rank:1},{name:'Plin',type:'E-wallet (BBVA/Interbank/Scotiabank)',rank:1},{name:'Visa / Mastercard',type:'Credit & Debit card',rank:1},{name:'BCP bank transfer',type:'Direct bank transfer',rank:2},{name:'Agentes / PagoEfectivo',type:'Cash at agent — significant outside Lima',rank:2},{name:'American Express',type:'Credit card (lower share)',rank:2} ],
+};
+
+// ── DEVICE DATA (StatCounter + IDC 2025) ──
+const DEVICE_DATA = {
+  sg: { mobile:{android:67,ios:32}, desktop:{windows:58,macos:28,linux:4}, browser:{Chrome:55,Safari:30,Edge:7,'Samsung Internet':3}, mobileShare:62, topBrand:'Samsung, Apple (high iOS share for SEA)', minApi:'API 26 (Android 8) safe. Always test iOS — 32% share.', alert:null },
+  my: { mobile:{android:70,ios:29}, desktop:{windows:72,macos:15,linux:3}, browser:{Chrome:62,Safari:24,Edge:6,'Samsung Internet':5}, mobileShare:68, topBrand:'Samsung, Xiaomi, Oppo', minApi:'API 24 (Android 7) for broad coverage. Mid-range Android significant.', alert:null },
+  id: { mobile:{android:87,ios:12}, desktop:{windows:76,macos:10,linux:4}, browser:{Chrome:84,'Samsung Internet':6,Safari:5,Opera:3}, mobileShare:75, topBrand:'Xiaomi (leading), Oppo, Samsung, Vivo, Realme', minApi:'API 21 (Android 5) for full coverage. Optimise bundle size and memory for low-RAM devices.', alert:'⚠ Most constrained device market. Significant low-end Android share — Xiaomi Redmi, Oppo A-series, Realme with 2GB RAM. Performance budgets are non-negotiable here. Test on a physical sub-$100 Android.' },
+  kh: { mobile:{android:59,ios:40}, desktop:{windows:80,macos:8,linux:3}, browser:{Chrome:57,Safari:40,'Facebook WebView':3}, mobileShare:52, topBrand:'iPhone (unusually high ~40% iOS share), Samsung, Huawei, Oppo', minApi:'API 21 (Android 5). iOS share ~40% — treat iOS testing at full parity with Android here.', alert:'⚠ Cambodia has the highest iOS penetration in SEA (~40%) — driven by gray-market iPhones. This is not a low-end Android-only market. Test iOS as primary. Also: Facebook in-app browser is disproportionately significant (~3%) — many users browse via Facebook Pages rather than a standalone browser.' },
+  vn: { mobile:{android:66,ios:34}, desktop:{windows:79,macos:9,linux:3}, browser:{Chrome:65,Safari:33,'Samsung Internet':5,'Cốc Cốc':3}, mobileShare:87, topBrand:'Samsung, Xiaomi, Oppo, Vivo', minApi:'API 23 (Android 6) for safe coverage. iOS ~34% — higher than Indonesia. Test iOS seriously.', alert:'⚠ Vietnam has one of the highest mobile traffic shares globally (~87% of web traffic is mobile). iOS penetration is ~34% — significantly higher than Indonesia. Cốc Cốc (Vietnamese Chromium browser) has ~3% share — compatible but include in test matrix.' },
+  co: { mobile:{android:79,ios:21}, desktop:{windows:74,macos:13,linux:4}, browser:{Chrome:86,Safari:11,Edge:4,'Samsung Internet':3}, mobileShare:58, topBrand:'Samsung, Xiaomi, Motorola', minApi:'API 23 (Android 6). Mid-range Android dominant. iOS ~21% — higher than most SEA markets.', alert:null },
+  pe: { mobile:{android:81,ios:18}, desktop:{windows:76,macos:11,linux:4}, browser:{Chrome:83,Safari:16,Edge:4,'Samsung Internet':3}, mobileShare:50, topBrand:'Samsung, Xiaomi, Motorola, BLU', minApi:'API 21 (Android 5) for rural coverage. Progressive enhancement critical for low connectivity.', alert:'⚠ Peru has the lowest mobile traffic share of all 7 markets (~50% mobile). Desktop gets equal real-world usage — invest in the desktop experience. Rural Peru (outside Lima, Arequipa, Trujillo) has lower-end devices and patchy connectivity — these are exactly the long-distance bus travellers. Design offline-tolerant booking flows.' },
+};
+
+// ── A11Y DATA ──
+const A11Y_SCRIPTS = [
+  {name:'Latin (English / Spanish / Bahasa)',minPx:12,lineh:'1.4',note:'Standard. No special adjustments needed.'},
+  {name:'Vietnamese (Latin + tone diacritics)',minPx:13,lineh:'1.5',note:'Stacked diacritics clip at 12px on Android WebView. Bump to 13px minimum.'},
+  {name:'Khmer',minPx:15,lineh:'1.9',note:'Stacking consonants are 3 vertical layers. Standard line-height clips glyphs. Never use Inter — Noto Sans Khmer required.'},
+  {name:'Mandarin Simplified (CJK)',minPx:12,lineh:'1.5',note:'CJK characters are square and full-width. Allow +20% horizontal expansion in components.'},
+  {name:'Tamil',minPx:13,lineh:'1.6',note:'Above-baseline vowel marks extend above cap height. Line-height 1.6 minimum.'},
+];
+
+// ── MESSAGING DATA ──
+const MESSAGING_DATA = {
+  sg: {
+    apps: [
+      {name:'WhatsApp', share:'~84%', rank:1, note:'Primary for personal & professional. WhatsApp Business API widely adopted by businesses.'},
+      {name:'Telegram', share:'~38%', rank:1, note:'Popular for channels, large community groups, news. Good for broadcast notifications.'},
+      {name:'WeChat', share:'Significant', rank:2, note:'Chinese-speaking community (~30% of population) and China-linked business contacts.'},
+    ],
+    otp: 'SMS is standard. WhatsApp OTP viable for registered WhatsApp Business API senders.',
+    support: 'WhatsApp Business API for customer support. Live chat expected on web.',
+    bizNote: 'English dominates in all digital comms. Businesses are expected to be reachable on WhatsApp. WeChat Mini Programs relevant if targeting Chinese-speaking segment.',
+  },
+  my: {
+    apps: [
+      {name:'WhatsApp', share:'~98%', rank:1, note:'Essentially universal. Used for personal, work, customer service, and payments confirmation. Highest WhatsApp penetration in SEA.'},
+      {name:'Telegram', share:'~56%', rank:1, note:'Strong second. Business channels, community groups, and broadcast use cases.'},
+      {name:'WeChat', share:'Significant', rank:2, note:'Chinese-Malaysian community (~23% of population) and cross-border China business.'},
+    ],
+    otp: 'SMS standard. WhatsApp OTP highly accepted.',
+    support: 'WhatsApp Business API is expected by users. Businesses without WhatsApp are seen as behind.',
+    bizNote: 'Users expect businesses to be reachable on WhatsApp in Malaysia — arguably more so than in SG. Consider WhatsApp as the primary async support channel, not just a supplementary one.',
+  },
+  id: {
+    apps: [
+      {name:'WhatsApp', share:'~91% (112M users)', rank:1, note:'#1 by far. Essential for personal, work, and business. Gojek, Tokopedia, and major banks all use WhatsApp for notifications.'},
+      {name:'Telegram', share:'High & growing', rank:1, note:'Popular for large group chats, business channels, community announcements.'},
+      {name:'LINE', share:'Declining', rank:2, note:'Was popular; now losing ground. Still used by some Gen X segments.'},
+    ],
+    otp: 'SMS standard. WhatsApp OTP increasingly common for consumer apps.',
+    support: 'WhatsApp Business API critical. Gojek set the expectation of in-app chat + WhatsApp support.',
+    bizNote: 'Super-app context: Gojek users are habituated to messaging within apps. In-app support chat (+ WhatsApp fallback) is the expected pattern. Never rely solely on email.',
+  },
+  kh: {
+    apps: [
+      {name:'Telegram', share:'#1 dominant', rank:1, note:'Took over from WhatsApp after 2021 privacy policy backlash. Used for news, community, business channels, and personal messaging.'},
+      {name:'Facebook Messenger', share:'#2', rank:1, note:'Strong second. Many businesses run customer support via Facebook Pages + Messenger. Critical for support strategy.'},
+      {name:'WhatsApp', share:'#3', rank:2, note:'Less dominant than other SEA markets. Used mainly for international contacts.'},
+    ],
+    otp: 'SMS standard. Telegram bot OTP viable given Telegram dominance.',
+    support: '⚠ Facebook Messenger + Telegram are the primary support channels — NOT WhatsApp. Build explicit Telegram and Facebook Page presence.',
+    bizNote: '⚠ A WhatsApp-first support strategy will miss a large segment in Cambodia. Telegram is #1. Many Cambodian businesses run their entire customer communication through Facebook Pages.',
+  },
+  vn: {
+    apps: [
+      {name:'Zalo', share:'~85% installed base (75M+ users)', rank:1, note:'Vietnamese super-app: messaging, ZaloPay, news, mini-apps, Zalo OA (Official Account). Equivalent to WeChat in China. Zalo OA is the primary business channel.'},
+      {name:'WhatsApp', share:'Rising fast (App Store #1 Dec 2025)', rank:1, note:'Rising significantly after Zalo privacy controversy in early 2026. Build WhatsApp Business alongside Zalo OA.'},
+      {name:'Viber', share:'Strong', rank:2, note:'Historically strong in Vietnam. #2 App Store downloads Dec 2025.'},
+      {name:'Telegram', share:'Notable', rank:2, note:'Tech-savvy users and community groups.'},
+    ],
+    otp: 'SMS standard. Zalo OA notification is the primary channel for Vietnamese apps — like WeChat OA for China.',
+    support: 'Zalo OA (Official Account) is expected for Vietnamese businesses. WhatsApp Business is rising as a secondary channel.',
+    bizNote: '⚠ Zalo OA is the Vietnamese equivalent of a WeChat Mini Program — businesses build Zalo OA pages, mini-apps, and notification flows inside Zalo. This is a design consideration for future features. WhatsApp is growing due to a 2026 privacy backlash against Zalo, but Zalo still has the largest installed base.',
+  },
+  co: {
+    apps: [
+      {name:'WhatsApp', share:'~1,228 sessions/user/month (near-universal)', rank:1, note:'Overwhelmingly dominant. Used for personal, work, government services, payments, and customer support. Carrier zero-rating reinforces it. Not using WhatsApp as a business is unusual.'},
+      {name:'Facebook Messenger', share:'Secondary', rank:2, note:'Still used, but declining relative to WhatsApp.'},
+      {name:'Telegram', share:'Niche', rank:2, note:'Tech-savvy users, privacy-conscious users, community groups.'},
+    ],
+    otp: 'SMS standard. WhatsApp OTP highly effective given near-universal penetration.',
+    support: 'WhatsApp Business API is the single most important customer support channel in Colombia.',
+    bizNote: 'WhatsApp in Colombia functions as email, customer service portal, and payment confirmation medium. Users expect transactional messages (booking confirmations, receipts, support) via WhatsApp — not just app notifications.',
+  },
+  pe: {
+    apps: [
+      {name:'WhatsApp', share:'~1,352 sessions/user/month — 2nd highest globally', rank:1, note:'More deeply embedded than even Colombia. Used for government services, Yape/Plin payment confirmations, business, personal, and community communication.'},
+      {name:'Facebook Messenger', share:'Secondary', rank:2, note:'Still present but declining.'},
+      {name:'Telegram', share:'Slowly growing', rank:2, note:'Urban tech users. Lower penetration vs LATAM average.'},
+    ],
+    otp: 'SMS standard. WhatsApp OTP highly effective.',
+    support: 'WhatsApp Business API is the primary business communication channel. Payment apps (Yape, Plin) use WhatsApp to share confirmations.',
+    bizNote: 'Peru has among the highest WhatsApp session frequency in the world. Booking confirmations, support, and receipts sent via WhatsApp are not supplementary — they are expected as the primary channel.',
+  },
+};
+
+// ── CALENDAR DATA ──
+const CALENDAR_DATA = {
+  sg: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Sun, Mon, Tue, Wed, Thu, Fri, Sat', note: 'Consumer calendars show Sunday first. ISO 8601 (Mon-first) used in some B2B/tech contexts.' },
+  my: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Ahd, Isn, Sel, Rab, Kha, Jum, Sab (Bahasa)', note: 'Bahasa Melayu day names: Ahad (Sun), Isnin (Mon), Selasa (Tue), Rabu (Wed), Khamis (Thu), Jumaat (Fri), Sabtu (Sat). Week starts Sunday.' },
+  id: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Min, Sen, Sel, Rab, Kam, Jum, Sab (Bahasa Indonesia)', note: 'Indonesian: Minggu (Sun), Senin (Mon), Selasa (Tue), Rabu (Wed), Kamis (Thu), Jumat (Fri), Sabtu (Sat). Week starts Sunday.' },
+  kh: { firstDay: 'Monday', isoWeek: true, dayNames: 'ច, អ, ត, ព, ព, ស, ស (Khmer)', note: '⚠ Cambodia uses Monday as the first day of the week — differs from all other markets in this tool. Date pickers must render Mon–Sun for Khmer locale.' },
+  vn: { firstDay: 'Sunday', isoWeek: false, dayNames: 'CN, T2, T3, T4, T5, T6, T7 (Vietnamese abbreviations)', note: 'Vietnamese: Chủ nhật (Sun), Thứ hai (Mon)…Thứ bảy (Sat). Calendars show Sunday first, but Monday is called "second day" linguistically (Thứ hai = ordinal 2).' },
+  co: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Dom, Lun, Mar, Mié, Jue, Vie, Sáb (Spanish)', note: 'Spanish: Domingo (Sun), Lunes, Martes, Miércoles, Jueves, Viernes, Sábado. Week starts Sunday.' },
+  pe: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Dom, Lun, Mar, Mié, Jue, Vie, Sáb (Spanish)', note: 'Same as Colombian Spanish. Domingo (Sunday) is the first day.' },
+};
+
+// ── ADDRESS FORMAT DATA ──
+const ADDRESS_DATA = {
+  sg: {
+    fields: ['Block / Unit', 'Street Name', 'Postal Code (6 digits)'],
+    example: '#12-34, Blk 10 Ang Mo Kio Street 64\nSingapore 569086',
+    postalNote: '6-digit postal codes are unique to a building. Build postcode → address autofill.',
+    notes: ['No city/state field — Singapore is a city-state. One address level is enough.', 'Block format: "Blk 10 #04-56" (block number + floor-unit). Common in HDB flats (~80% of population).', 'Unit label in forms: "Unit / Floor".'],
+  },
+  my: {
+    fields: ['Unit / Lot No.', 'Street / Jalan', 'Area / Taman', 'Postcode', 'City', 'State (required)'],
+    example: 'No. 12, Jalan Bukit Bintang\nBukit Bintang, 55100 Kuala Lumpur\nWilayah Persekutuan',
+    postalNote: '5-digit postcode. Build postcode → city/state autofill. "Taman" = residential estate (extremely common).',
+    notes: ['State is required — Malaysia has 13 states + 3 federal territories.', '"Jalan" = road/street. "Taman" = residential area (e.g., Taman Desa).', 'State dropdown is complex — include all 13 states + 3 Federal Territories.'],
+  },
+  id: {
+    fields: ['Jalan (Street + No.)', 'Kelurahan (sub-district)', 'Kecamatan (district)', 'City / Kabupaten', 'Province (required)', 'Postal Code'],
+    example: 'Jl. Sudirman No. 45\nKel. Senayan, Kec. Kebayoran Baru\nJakarta Selatan, DKI Jakarta 12190',
+    postalNote: '5-digit postal code. Province is required — Indonesia has 38 provinces.',
+    notes: ['⚠ Official Indonesian addresses include RT/RW (neighbourhood units). Simplify checkout — only collect Street, Kelurahan, City, Province, Postal Code.', '"Jl." = Jalan (street). "Kel." = Kelurahan. "Kec." = Kecamatan.', 'Jakarta is split into North/South/East/West/Central Jakarta (use as city-level).'],
+  },
+  kh: {
+    fields: ['House No., Street No.', 'Sangkat (commune)', 'Khan (district)', 'Province / City'],
+    example: 'No. 23, St. 63\nSangkat Boeung Keng Kang I\nKhan Chamkarmon, Phnom Penh',
+    postalNote: 'Postal codes exist but are rarely used. Khan (district) is the key level for delivery.',
+    notes: ['Urban addresses use street numbers, not names — "St. 63" is more recognisable than the official name.', 'Sangkat = commune. Khan = district. Both required for Phnom Penh delivery.', 'Outside Phnom Penh, addresses are often imprecise. Allow a landmark/notes field.', 'Romanisation of Khmer addresses is inconsistent across documents.'],
+  },
+  vn: {
+    fields: ['House Number, Street', 'Phường / Xã (Ward)', 'Quận / Huyện (District)', 'Tỉnh / Thành phố (Province)'],
+    example: '145 Nguyễn Huệ\nPhường Bến Nghé, Quận 1\nTP. Hồ Chí Minh',
+    postalNote: '6-digit postal code (since 2017). Still often omitted — do not make it required.',
+    notes: ['⚠ Vietnamese diacritics in addresses are legally required. Never strip accents — "Nguyen Hue" ≠ "Nguyễn Huệ" legally.', 'Ho Chi Minh City: numbered districts (Quận 1–12) + named districts. Hanoi: named quận.', '"TP." = Thành phố (city). "P." = Phường (urban ward). "X." = Xã (rural commune).', '63 provinces + centrally administered cities — province dropdown is required.'],
+  },
+  co: {
+    fields: ['Vía principal + Número # Cruce - Distancia', 'Complemento (Apt/Piso)', 'Ciudad', 'Departamento (required)'],
+    example: 'Cra 7 # 32-16, Apto 301\nBogotá D.C., Cundinamarca',
+    postalNote: '6-digit postal code. Introduced 2013 — used for parcels, not everyday addressing.',
+    notes: ['⚠ Colombian address notation is unique: "Cra 7 # 32-16" = Carrera 7, at 16m from intersection with Calle 32. Cra = Carrera (N-S), Cl/Cll = Calle (E-W), Dg = Diagonal, Tv = Transversal.', 'Many users will be confused by "Street" and "Number" fields from non-Colombian forms.', 'Colombia has 32 departments. "Bogotá D.C." is a Distrito Capital, not a department.', 'Consider a single free-text address field + city + department for lowest friction.'],
+  },
+  pe: {
+    fields: ['Street + Number', 'Dpto/Int/Piso (optional)', 'Distrito', 'Provincia', 'Departamento'],
+    example: 'Av. Larco 1301, Dpto 4B\nMiraflores, Lima, Lima',
+    postalNote: '5-digit postal code. Optional in practice — district is more important for delivery.',
+    notes: ['"Av." = Avenida. "Jr." = Jirón (unique multi-block street type in Peru/Bolivia). "Psje." = Pasaje (alley).', 'Lima addresses: city = Lima, province = Lima, department = Lima — all three levels named Lima. District (e.g., Miraflores, San Isidro, Surco) is required to disambiguate.', 'Rural Peruvian addresses are often imprecise — nearest town + landmark. Design for missing fields and provide a free-text notes field.'],
+  },
+};
+
+// ── TEXT EXPANSION DATA ──
+const TEXT_EXPANSION_DATA = [
+  { lang:'English (baseline)', code:'en', avg:0, worst:0, color:'#aaa', note:'Reference. All expansions relative to English source copy.' },
+  { lang:'Bahasa Indonesia', code:'id', avg:10, worst:30, color:'#3ddc84', note:'Compound verbs stretch specific phrases ("Pilih kursi" = choose seat is fine). Numbers and short labels are often shorter.' },
+  { lang:'Bahasa Melayu', code:'ms', avg:10, worst:30, color:'#3ddc84', note:'Similar to Bahasa Indonesia. English loan words are common in digital UI, reducing expansion.' },
+  { lang:'Vietnamese', code:'vi', avg:20, worst:40, color:'#f4a261', note:'Monosyllabic words with spaces between syllables make short strings longer. Diacritics add vertical space. Test all CTAs at +25%.' },
+  { lang:'Khmer', code:'km', avg:null, worst:null, color:'#c0392b', note:'Not directly comparable — different script. Reserve +40% line height for stacking glyphs. Test every layout with Khmer text before final spec.' },
+  { lang:'Spanish (Colombia / Peru)', code:'es', avg:25, worst:45, color:'#e74c3c', note:'Spanish is consistently longer than English. "Confirm booking" → "Confirmar reserva de viaje" can break button layouts. Design all components with a +30% text expansion test.' },
+];
+
+// ── RENDER FUNCTIONS ──
+function renderNumbers(m, code, india) {
+  const n = NUM_DATA[code];
+  if (!n) return '';
+  const sepRows = {
+    'comma/period': {thou:'1,000',dec:'1.5',label:'comma=thousands · period=decimal'},
+    'period/comma': {thou:'1.000',dec:'1,5',label:'period=thousands · comma=decimal'},
+  };
+  const sr = sepRows[n.sep];
+  return `
+    <div class="table-wrap">
+      <div class="table-title">Separator pattern — engineers start here</div>
+      <table class="ref-table">
+        <tr><th>Market</th><th>1,000 written as</th><th>1.5 written as</th><th>Pattern</th></tr>
+        <tr><td>${m.flag} ${m.name}</td><td class="mono">${sr.thou}</td><td class="mono">${sr.dec}</td><td class="note">${sr.label}</td></tr>
+        ${india ? '<tr style="background:#fff7ee"><td>🇮🇳 India</td><td class="mono diff-diff">1,00,000</td><td class="mono">1.5</td><td class="note diff-diff">South Asian grouping — 2-2-3 digits. Never use lakh/crore in international UI.</td></tr>' : ''}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Percentage</div>
+      <table class="ref-table">
+        <tr><th>Position</th><th>Correct</th><th>Avoid</th></tr>
+        <tr>
+          <td>${n.pct.pos}</td>
+          <td>${n.pct.ex.map(e=>`<span class="num-right">${e}</span>`).join(' &nbsp;')}</td>
+          <td>${n.pct.wrong.map(e=>`<span class="num-wrong">${e}</span>`).join(' ') || '—'}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Large number abbreviations</div>
+      <table class="ref-table">
+        <tr><th>Thousands</th><th>Millions</th><th>Examples</th><th>Note</th></tr>
+        <tr>
+          <td class="mono">${n.abbr.k}</td>
+          <td class="mono">${n.abbr.m}</td>
+          <td>${n.abbr.ex.map(e=>`<span class="num-right">${e}</span>`).join(' &nbsp;')}</td>
+          <td class="note">${n.abbr.note}</td>
+        </tr>
+        ${india ? '<tr style="background:#fff7ee"><td colspan="4"><span class="badge badge-india">India uses L (lakh = 100K) and Cr (crore = 10M). Never use these in international UI.</span></td></tr>' : ''}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Ordinal numbers (seat labels, rankings)</div>
+      <table class="ref-table">
+        <tr><th>Format</th><th>Note</th></tr>
+        <tr>
+          <td>${n.ordinal.ex.map(e=>`<span class="num-right">${e}</span>`).join(' &nbsp;')}</td>
+          <td class="note">${n.ordinal.note}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Negative numbers &amp; decimals</div>
+      <table class="ref-table">
+        <tr><th>Type</th><th>Format</th><th>Note</th></tr>
+        <tr><td>Negative amounts</td><td>${n.neg.ex.map(e=>`<span class="num-right">${e}</span>`).join(' &nbsp;')}</td><td class="note">${n.neg.note}</td></tr>
+        <tr><td>Fractions / decimals</td><td>${n.frac.ex.map(e=>`<span class="num-right">${e}</span>`).join(' &nbsp;')}</td><td class="note">${n.frac.note}</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function renderNames(m, code) {
+  const n = NAME_DATA[code];
+  if (!n) return '';
+  return `
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-label">Name order</div>
+        <div class="info-card-value" style="font-size:14px">${n.order}</div>
+        <div class="info-card-sub">Example: ${n.example}</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Single-name users</div>
+        <div class="info-card-value" style="font-size:14px;${n.singleName?'color:#c0392b;':''}">${n.singleName ? '⚠ Yes — significant' : 'No'}</div>
+        <div class="info-card-sub">Family name first: ${n.familyFirst ? '⚠ Yes' : 'No'}</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Form field guidance</div>
+      <table class="ref-table">
+        ${n.formNotes.map(note=>`<tr><td style="width:1%;white-space:nowrap;vertical-align:top;padding-top:12px;color:var(--ink3)">›</td><td style="font-size:13px;line-height:1.65;padding:10px 12px">${note}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Honorifics</div>
+      <table class="ref-table"><tr><td style="font-size:13px">${n.honorifics}</td></tr></table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Accepted ID types for passenger verification</div>
+      <table class="ref-table">${n.idTypes.map(id=>`<tr><td>${id}</td></tr>`).join('')}</table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Universal rules (all markets)</div>
+      <table class="ref-table">
+        <tr><td>Field length</td><td>Minimum 80 chars per name field. 100+ for LatAm double surnames.</td></tr>
+        <tr><td>Last name</td><td>Make optional for ID/MY (patronymic) and ID (mononymous users). Required for LatAm.</td></tr>
+        <tr><td>Character sets</td><td>Accept full Unicode. Never strip diacritics — names become legally incorrect.</td></tr>
+        <tr><td>Validation</td><td>Validate only on empty. Do not validate name format, length caps, or character patterns.</td></tr>
+        <tr><td>Travel document match</td><td>Name must match travel ID exactly. Show this instruction inline at the field, not only at error.</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function renderPayments(code) {
+  const payments = PAYMENT_DATA[code] || [];
+  const p1 = payments.filter(p=>p.rank===1);
+  const p2 = payments.filter(p=>p.rank===2);
+  const cardHtml = p => `<div class="payment-card"><div class="payment-name">${p.name}</div><div class="payment-type">${p.type}</div><span class="payment-rank rank-${p.rank}">Priority ${p.rank}</span></div>`;
+  return `
+    <div class="table-wrap">
+      <div class="table-title">Priority 1 — support at launch</div>
+      <div class="payment-grid">${p1.map(cardHtml).join('')}</div>
+    </div>
+    ${p2.length ? `<div class="table-wrap"><div class="table-title">Priority 2 — post-launch</div><div class="payment-grid">${p2.map(cardHtml).join('')}</div></div>` : ''}
+    <div class="table-wrap">
+      <div class="table-title">Payment UX rules (all markets)</div>
+      <table class="ref-table">
+        <tr><td>Logo display</td><td>Show payment method logo, not just name. Users recognise logos faster than text.</td></tr>
+        <tr><td>Currency confirmation</td><td>Always confirm total in local currency on the payment screen, not just at cart.</td></tr>
+        <tr><td>Trust signals</td><td>Security badges matter significantly in VN, KH, CO, PE — higher payment anxiety than SG/MY.</td></tr>
+        <tr><td>Failure handling</td><td>Payment failures are the #1 reason for booking abandonment. Retry must be immediate with a clear reason.</td></tr>
+        <tr><td>E-wallet deep links</td><td>For GoPay, MoMo, Yape etc — test deep-link redirects on both Android and iOS. Flows differ significantly by OS.</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function renderA11y(code) {
+  return `
+    <div class="table-wrap">
+      <div class="table-title">Minimum font sizes by script</div>
+      <table class="ref-table">
+        <tr><th>Script</th><th>Min size</th><th>Line height</th><th>Note</th></tr>
+        ${A11Y_SCRIPTS.map(s=>`
+          <tr>
+            <td style="font-weight:500">${s.name}</td>
+            <td class="mono" style="${s.minPx>12?'color:#c0392b;font-weight:500':''}">${s.minPx}px</td>
+            <td class="mono">${s.lineh}</td>
+            <td class="note">${s.note}</td>
+          </tr>`).join('')}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Touch target minimums</div>
+      <table class="ref-table">
+        <tr><th>Platform</th><th>Minimum</th><th>Note</th></tr>
+        <tr><td>iOS</td><td class="mono">44×44pt</td><td class="note">Apple HIG minimum. Applies to all interactive elements.</td></tr>
+        <tr><td>Android</td><td class="mono">48×48dp</td><td class="note">Material Design minimum. Slightly larger than iOS.</td></tr>
+        <tr><td>Web</td><td class="mono">44×44px at 1×</td><td class="note">WCAG 2.5.5 AAA. WCAG 2.5.8 AA (2.2) minimum is 24×24px.</td></tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Colour contrast — WCAG AA</div>
+      <table class="ref-table">
+        <tr><td>Body text (&lt;18pt / &lt;14pt bold)</td><td>4.5:1 minimum</td></tr>
+        <tr><td>Large text (≥18pt / ≥14pt bold)</td><td>3:1 minimum</td></tr>
+        <tr><td>UI components &amp; graphical objects</td><td>3:1 minimum</td></tr>
+        <tr><td>redBus red (#D0021B) on white</td><td>5.1:1 — passes AA for body text ✓</td></tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Script-specific rendering rules</div>
+      <table class="ref-table">
+        <tr><td>Khmer</td><td>Set container line-height to 1.9×. Stacking glyphs clip in standard containers. Never rely on system font fallback.</td></tr>
+        <tr><td>Vietnamese</td><td>Test at 13px minimum. Double-stacked diacritics (ướ, ặ) disappear below this on Android WebViews.</td></tr>
+        <tr><td>Mandarin / CJK</td><td>CJK characters are square — they occupy ~25% more horizontal width than Latin at the same point size. Allow text expansion in fixed-width components.</td></tr>
+        <tr><td>Tamil</td><td>Above-baseline vowel marks need clearance at top. Use line-height 1.6 minimum.</td></tr>
+        <tr><td>All scripts</td><td>Test with dynamic type / large text accessibility setting. Layouts that break at 120% scale fail accessibility audits.</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function renderDevices(code) {
+  const d = DEVICE_DATA[code];
+  if (!d) return '';
+  const bar = (label, pct, color) => `
+    <div class="os-row">
+      <div class="os-label">${label}</div>
+      <div class="os-track"><div class="os-fill" style="width:${pct}%;background:${color}"><span class="os-pct">${pct}%</span></div></div>
+    </div>`;
+  const browsers = Object.entries(d.browser);
+  const colors = {'Chrome':'#4285f4','Safari':'#666','Samsung Internet':'#1428a0','Edge':'#0078d4','Opera':'#ff1b2d','Cốc Cốc':'#27ae60','Facebook WebView':'#1877f2'};
+  return `
+    ${d.alert ? `<div class="device-alert">${d.alert}</div>` : ''}
+    <div class="table-wrap">
+      <div class="table-title">Traffic split — mobile vs desktop (2025)</div>
+      <table class="ref-table">
+        <tr><td>Mobile share</td><td class="mono">${d.mobileShare}%</td><td class="note">of all web traffic</td></tr>
+        <tr><td>Desktop + tablet</td><td class="mono">${100-d.mobileShare}%</td><td></td></tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Mobile OS market share (2025)</div>
+      <div style="padding:12px 16px;background:var(--surface)">
+        ${bar('Android', d.mobile.android, '#3ddc84')}
+        ${bar('iOS', d.mobile.ios, '#444')}
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Desktop OS market share (2025)</div>
+      <div style="padding:12px 16px;background:var(--surface)">
+        ${bar('Windows', d.desktop.windows, '#0078d4')}
+        ${bar('macOS', d.desktop.macos, '#888')}
+        ${d.desktop.linux ? bar('Linux', d.desktop.linux, '#bbb') : ''}
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Browser share — all devices (2025)</div>
+      <div style="padding:12px 16px;background:var(--surface)">
+        ${browsers.map(([name,pct]) => bar(name, pct, colors[name]||'#999')).join('')}
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Android engineering guidance</div>
+      <table class="ref-table">
+        <tr><td>Top brands</td><td>${d.topBrand}</td></tr>
+        <tr><td>Min API target</td><td class="note">${d.minApi}</td></tr>
+        <tr><td>ICU bundling</td><td>API &lt; 24: bundle icu4j explicitly for correct currency/number formatting. API 24+ has modern ICU built in.</td></tr>
+        <tr><td>Dark mode</td><td>~82% of Android users use dark mode (2025). Test all screens in dark mode.</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+
+function renderMessaging(code) {
+  const d = MESSAGING_DATA[code];
+  if (!d) return '';
+  const rankColor = r => r === 1 ? '#fef3c7' : 'var(--surface2)';
+  const rankTextColor = r => r === 1 ? '#92400e' : 'var(--ink3)';
+  const rankLabel = r => r === 1 ? 'Priority channel' : 'Secondary';
+  return `
+    ${d.bizNote.includes('⚠') ? `<div class="warn-box">${d.bizNote}</div>` : ''}
+    <div class="table-wrap">
+      <div class="table-title">Messaging apps — ranked by dominance</div>
+      <div class="msg-app-grid">
+        ${d.apps.map(a=>`
+          <div class="msg-app-card">
+            <div class="msg-app-name">${a.name}</div>
+            <div class="msg-app-share">${a.share}</div>
+            <div style="margin-top:6px;display:inline-block;padding:2px 7px;border-radius:3px;font-size:10px;font-family:var(--mono);background:${rankColor(a.rank)};color:${rankTextColor(a.rank)}">${rankLabel(a.rank)}</div>
+            <div class="msg-app-note">${a.note}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Design & comms guidance</div>
+      <table class="ref-table">
+        <tr><td style="width:180px;font-weight:500">OTP / Verification</td><td style="font-size:13px">${d.otp}</td></tr>
+        <tr><td style="font-weight:500">Customer support</td><td style="font-size:13px">${d.support}</td></tr>
+        <tr><td style="font-weight:500">Business context</td><td style="font-size:13px">${d.bizNote}</td></tr>
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">India comparison</div>
+      <table class="ref-table">
+        <tr><td>India primary channels</td><td>WhatsApp (~75% penetration), SMS, and increasingly RCS. Google Pay / PhonePe use WhatsApp for payment alerts. Transactional SMS is deeply ingrained.</td></tr>
+        <tr><td>Key difference</td><td>In India, SMS is still a primary notification/OTP channel alongside WhatsApp. In SEA & LatAm, WhatsApp is often the first choice over SMS.</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function renderAddress(code) {
+  const d = ADDRESS_DATA[code];
+  if (!d) return '';
+  return `
+    <div class="table-wrap">
+      <div class="table-title">Address format</div>
+      <table class="ref-table">
+        <tr><th>Field order</th><th></th></tr>
+        ${d.fields.map((f,i)=>`<tr><td class="mono" style="color:var(--ink3);width:30px">${i+1}</td><td style="font-size:13px">${f}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Example address</div>
+      <div class="addr-example">${d.example.replace(/\n/g,'<br>')}</div>
+      <div style="padding:8px 12px;font-size:12px;color:var(--ink3);background:var(--surface);border-top:1px solid var(--rule)">${d.postalNote}</div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Form design notes</div>
+      <table class="ref-table">
+        ${d.notes.map(n=>`<tr><td style="width:1%;white-space:nowrap;vertical-align:top;padding-top:12px;color:var(--ink3)">›</td><td style="font-size:13px;line-height:1.65;padding:10px 12px">${n}</td></tr>`).join('')}
+      </table>
+    </div>
+  `;
+}
+
+function renderTextExpansion() {
+  return `
+    <div class="table-wrap">
+      <div class="table-title">Text expansion — English → translated UI copy</div>
+      <table class="ref-table">
+        <tr><th>Language</th><th>Avg expansion</th><th>Worst case</th><th>Note</th></tr>
+        ${TEXT_EXPANSION_DATA.map(d=>`
+          <tr>
+            <td style="font-weight:500">${d.lang}</td>
+            <td>
+              ${d.avg !== null ? `
+                <div class="expansion-bar-wrap">
+                  <div class="expansion-bar" style="width:${Math.max(d.avg*2+20,20)}px;background:${d.color}">+${d.avg}%</div>
+                </div>` : '<span style="color:var(--ink3);font-size:12px">N/A</span>'}
+            </td>
+            <td class="mono" style="color:${d.worst>30?'#c0392b':d.worst>15?'#e67e22':'var(--ink3)'}">
+              ${d.worst !== null ? `+${d.worst}%` : 'N/A'}
+            </td>
+            <td class="note">${d.note}</td>
+          </tr>`).join('')}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Component design rules for text expansion</div>
+      <table class="ref-table">
+        <tr><td>Buttons / CTAs</td><td>Never use fixed widths on buttons with translated labels. Use min-width + padding. Test all primary CTAs in Spanish (+30%) and Vietnamese (+25%).</td></tr>
+        <tr><td>Navigation labels</td><td>Keep nav item labels to 1–2 words in English max. Spanish equivalents will use 2–3 words.</td></tr>
+        <tr><td>Toast / error messages</td><td>Design toasts and error banners to expand vertically. A 1-line English error can be 2–3 lines in Spanish.</td></tr>
+        <tr><td>Table cells</td><td>Avoid fixed-width cells for translated content. Use min-width and allow wrapping.</td></tr>
+        <tr><td>Khmer-specific</td><td>Khmer is not about character count — it's about line height. Every container with Khmer text needs 1.9× line-height minimum.</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function renderCalendarSection(code) {
+  const d = CALENDAR_DATA[code];
+  if (!d) return '';
+  return `
+    <div class="table-wrap">
+      <div class="table-title">Calendar — date picker configuration</div>
+      <table class="ref-table">
+        <tr>
+          <td style="width:200px">First day of week</td>
+          <td>
+            <strong style="${d.firstDay==='Monday'?'color:#c0392b':''}">${d.firstDay}</strong>
+            ${d.firstDay==='Monday'?'<span class="badge badge-missing" style="margin-left:8px">Differs from other markets</span>':''}
+          </td>
+        </tr>
+        <tr><td>Day name abbreviations</td><td class="mono" style="font-size:12px">${d.dayNames}</td></tr>
+        <tr><td>ISO 8601 week</td><td>${d.isoWeek ? 'Yes — Mon-first' : 'No — Sun-first (consumer standard)'}</td></tr>
+        <tr><td>Notes</td><td class="note">${d.note}</td></tr>
+      </table>
+    </div>
+  `;
+}
+
+function renderMarket() {
+  const m = MARKETS[currentMarket];
+  const activeTab = document.querySelector('.tab.active')?.dataset?.tab || 'currency';
+  const main = document.getElementById('main');
+
+  const indiaStrip = showIndia ? `
+    <div class="india-strip visible">
+      <div class="india-strip-header">🇮🇳 India baseline</div>
+      <div class="india-grid">
+        <div class="india-cell">
+          <div class="india-cell-label">Currency</div>
+          <div class="india-cell-value">₹</div>
+          <div class="india-cell-sub">INR · Prefix, no space</div>
+        </div>
+        <div class="india-cell">
+          <div class="india-cell-label">Example</div>
+          <div class="india-cell-value">₹1,23,456</div>
+          <div class="india-cell-sub">Lakh/crore system</div>
+        </div>
+        <div class="india-cell">
+          <div class="india-cell-label">Time</div>
+          <div class="india-cell-value">12h</div>
+          <div class="india-cell-sub">IST (UTC+5:30)</div>
+        </div>
+        <div class="india-cell">
+          <div class="india-cell-label">Phone</div>
+          <div class="india-cell-value">+91</div>
+          <div class="india-cell-sub">98765 43210</div>
+        </div>
+        <div class="india-cell">
+          <div class="india-cell-label">Locale tag</div>
+          <div class="india-cell-value" style="font-size:13px">en-IN</div>
+          <div class="india-cell-sub">ICU currency: INR</div>
+        </div>
+        <div class="india-cell">
+          <div class="india-cell-label">Script</div>
+          <div class="india-cell-value" style="font-size:13px">Latin + Regional</div>
+          <div class="india-cell-sub">Devanagari, Tamil etc.</div>
+        </div>
+      </div>
+    </div>` : '';
+
+  main.innerHTML = `
+    <div class="page-header">
+      <h1>${m.flag} ${m.name} <span class="locale-tag">${m.locale}</span></h1>
+      <div class="sub">ICU currency code: <strong>${m.currency}</strong> · Timezone: ${m.timezone}${currentMarket==='kh' ? ' · <span class="badge badge-missing" style="vertical-align:middle">Mon-first calendar</span>' : ''}${m.usdUsed ? ' · <span class="badge badge-partial" style="vertical-align:middle">Dual currency (USD + KHR)</span>' : ''}</div>
+    </div>
+
+    ${indiaStrip}
+
+    <div class="tabs">
+      <button class="tab ${activeTab==='currency'?'active':''}" data-tab="currency" onclick="switchTab('currency')">Currency</button>
+      <button class="tab ${activeTab==='datetime'?'active':''}" data-tab="datetime" onclick="switchTab('datetime')">Date &amp; Time</button>
+      <button class="tab ${activeTab==='phone'?'active':''}" data-tab="phone" onclick="switchTab('phone')">Phone</button>
+      <button class="tab ${activeTab==='fonts'?'active':''}" data-tab="fonts" onclick="switchTab('fonts')">Fonts &amp; Script</button>
+      <button class="tab ${activeTab==='icu'?'active':''}" data-tab="icu" onclick="switchTab('icu')">ICU / Code</button>
+      <button class="tab ${activeTab==='numbers'?'active':''}" data-tab="numbers" onclick="switchTab('numbers')">Numbers</button>
+      <button class="tab ${activeTab==='names'?'active':''}" data-tab="names" onclick="switchTab('names')">Names &amp; Forms</button>
+      <button class="tab ${activeTab==='payments'?'active':''}" data-tab="payments" onclick="switchTab('payments')">Payments</button>
+      <button class="tab ${activeTab==='messaging'?'active':''}" data-tab="messaging" onclick="switchTab('messaging')">Messaging</button>
+      <button class="tab ${activeTab==='a11y'?'active':''}" data-tab="a11y" onclick="switchTab('a11y')">Accessibility</button>
+      <button class="tab ${activeTab==='devices'?'active':''}" data-tab="devices" onclick="switchTab('devices')">Devices &amp; Browsers</button>
+    </div>
+
+    <div id="tab-currency" class="section ${activeTab==='currency'?'active':''}">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Symbol</div>
+          <div class="info-card-value">${m.currencySymbol}</div>
+          <div class="info-card-sub">${m.currency} · ${m.currencyPosition}</div>
+          ${showIndia ? `<div class="info-card-note">India uses ₹ (INR) · ${diff(m.currencySymbol, '₹')} vs ₹</div>` : ''}
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Formatted example</div>
+          <div class="info-card-value" style="font-size:16px">${m.currencyExample.split('·')[0].trim()}</div>
+          <div class="info-card-sub">${m.sep}</div>
+          ${showIndia ? `<div class="info-card-note">India: ₹1,23,456 (lakh system — grouping differs)</div>` : ''}
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">Currency reference</div>
+        <table class="ref-table">
+          <tr><th>Property</th><th>Value</th>${showIndia ? '<th>India</th>' : ''}</tr>
+          <tr>
+            <td>ISO code</td>
+            <td class="mono">${m.currency}</td>
+            ${showIndia ? '<td class="mono diff-diff">INR</td>' : ''}
+          </tr>
+          <tr>
+            <td>UI symbol</td>
+            <td class="mono">${m.currencySymbol}</td>
+            ${showIndia ? `<td class="mono ${m.currencySymbol==='₹'?'diff-same':'diff-diff'}">₹</td>` : ''}
+          </tr>
+          <tr>
+            <td>Position</td>
+            <td>${m.currencyPosition}</td>
+            ${showIndia ? `<td class="${m.currencyPosition==='Prefix, no space'?'diff-same':'diff-diff'}">Prefix, no space</td>` : ''}
+          </tr>
+          <tr>
+            <td>Thousands sep</td>
+            <td class="mono">${m.sep.split('·')[0].trim()}</td>
+            ${showIndia ? `<td class="mono">, (comma)</td>` : ''}
+          </tr>
+          <tr>
+            <td>Decimal sep</td>
+            <td class="mono">${m.sep.split('·')[1]?.trim() || '—'}</td>
+            ${showIndia ? `<td class="mono">. (period)</td>` : ''}
+          </tr>
+          <tr>
+            <td>Grouping system</td>
+            <td>${currentMarket==='id'||currentMarket==='vn'||currentMarket==='co' ? '<span class="badge badge-partial">Period thousands · 1.234.567</span>' : 'Western — 1,234,567'}</td>
+            ${showIndia ? `<td class="diff-diff">South Asian — 1,23,456 (lakh grouping)</td>` : ''}
+          </tr>
+          <tr>
+            <td>Decimals shown</td>
+            <td>${currentMarket==='kh'||currentMarket==='vn'||currentMarket==='id' ? 'No — no meaningful subunit' : 'Yes — 2 decimal places'}</td>
+            ${showIndia ? `<td>Yes — 2 decimal places</td>` : ''}
+          </tr>
+        </table>
+      </div>
+      ${m.currencyNote ? `<div class="table-wrap"><div class="info-card-note" style="border-radius:0;background:var(--surface);padding:12px 16px;">⚠ ${m.currencyNote}</div></div>` : ''}
+      ${m.usdUsed ? `<div class="table-wrap" style="border-color:#f0c66e;"><div class="table-title" style="background:#fff8e6;color:#7a4f00;">USD co-currency</div><div style="padding:12px 16px;font-size:13px;background:var(--surface);">${m.usdNote}</div></div>` : ''}
+    </div>
+
+    <div id="tab-datetime" class="section ${activeTab==='datetime'?'active':''}">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Time convention</div>
+          <div class="info-card-value">${m.timeFormat.includes('24')&&m.timeFormat.includes('12') ? '12h / 24h' : m.timeFormat.includes('24') ? '24h' : '12h'}</div>
+          <div class="info-card-sub">${m.timeFormat}</div>
+          ${showIndia ? `<div class="info-card-note">India: 12h dominant ${diff(m.timeFormat, '12h dominant')}</div>` : ''}
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">Timezone</div>
+          <div class="info-card-value" style="font-size:15px">${m.timezone.split('·')[0].trim()}</div>
+          <div class="info-card-sub">${m.timezone}</div>
+          ${showIndia ? `<div class="info-card-note">India: IST (UTC+5:30) · ${diff(m.timezone.split('(')[1]?.replace(')','').trim(), 'UTC+5:30')}</div>` : ''}
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">Date formats</div>
+        <table class="ref-table">
+          <tr><th>Format</th><th>Example</th><th>Use when</th></tr>
+          <tr><td>Primary (short)</td><td class="example">3 Sep</td><td class="note">Default in UI</td></tr>
+          <tr><td>Extended</td><td class="example">3 Sep 2025<br>Wed, 3 Sep</td><td class="note">Year ≠ current year / Calendar views</td></tr>
+          <tr><td>Range, same month</td><td class="example">3–4 Sep</td><td class="note">Multi-day trips</td></tr>
+          <tr><td>Range, cross-month</td><td class="example">3 Sep–4 Jan 2026</td><td class="note">Show year when crossing</td></tr>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">Time formats</div>
+        <table class="ref-table">
+          <tr><th>Format</th><th>24h</th><th>12h</th></tr>
+          <tr><td>Time only</td><td class="example">20:15</td><td class="example">8:15 PM</td></tr>
+          <tr><td>Time range</td><td class="example">20:15–00:15</td><td class="example">8:15 PM–12:15 AM</td></tr>
+          <tr><td>Compact (date·time)</td><td class="example">3 Sep · 20:15</td><td class="example">3 Sep · 8:15 PM</td></tr>
+          <tr><td>Extended</td><td class="example">Wed, 3 Sep 2025 · 20:15</td><td class="example">Wed, 3 Sep 2025 · 8:15 PM</td></tr>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">Rules</div>
+        <table class="ref-table">
+          <tr><td>AM/PM</td><td>Always uppercase. No periods (PM not P.M.)</td></tr>
+          <tr><td>Timezone in UI</td><td>Only when cross-timezone context is needed. Use abbreviation: SGT, WIB, ICT, COT, PET</td></tr>
+          <tr><td>DST</td><td>${m.dst ? '⚠ Observed — handle clock changes' : 'Not observed — no DST offset changes'} ${currentMarket==='co'||currentMarket==='pe' ? '· <strong>Note: Colombia/Peru do not observe DST — affects timestamp arithmetic</strong>' : ''}</td></tr>
+          <tr><td>Numeric dates</td><td>Avoid — dd/mm/yyyy vs mm/dd/yyyy ambiguity. Use "3 Sep" format.</td></tr>
+        </table>
+      </div>
+      ${renderCalendarSection(currentMarket)}
+    </div>
+
+    <div id="tab-phone" class="section ${activeTab==='phone'?'active':''}">
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="info-card-label">Local format</div>
+          <div class="info-card-value" style="font-size:16px">${m.phone}</div>
+          <div class="info-card-sub">Use spaces. No parentheses, no dashes.</div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-label">With country code</div>
+          <div class="info-card-value" style="font-size:16px">${m.phoneCC}</div>
+          ${showIndia ? `<div class="info-card-sub">India: +91 98765 43210</div>` : ''}
+        </div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">Validation regex</div>
+        <table class="ref-table">
+          <tr><th>Pattern</th><th>Regex</th></tr>
+          <tr>
+            <td>With/without country code</td>
+            <td class="regex-cell">${m.phoneRegex}</td>
+          </tr>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">Input UX rules</div>
+        <table class="ref-table">
+          <tr><td>Display format</td><td>Spaces for readability. No dashes, no parentheses.</td></tr>
+          <tr><td>Country code entry</td><td>Accept with or without country code. Strip leading zero before applying country code if detected.</td></tr>
+          <tr><td>Validation timing</td><td>Validate on blur, not on keystroke. Users paste numbers in varied formats.</td></tr>
+          <tr><td>Placeholder</td><td>Use local format as placeholder: <span class="mono">${m.phone}</span></td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-fonts" class="section ${activeTab==='fonts'?'active':''}">
+      <div class="table-wrap">
+        <div class="table-title">Script &amp; font requirements</div>
+        <table class="ref-table">
+          <tr>
+            <td style="width:180px">Primary script</td>
+            <td>${m.script}</td>
+            ${showIndia ? `<td>Latin + Devanagari + regional scripts</td>` : ''}
+          </tr>
+          <tr>
+            <td>Required fonts</td>
+            <td>${m.fonts}</td>
+            ${showIndia ? `<td>Inter + Noto Sans family</td>` : ''}
+          </tr>
+          <tr>
+            <td>Font gaps</td>
+            <td>
+              ${m.fontGap.length === 0
+                ? '<span class="badge badge-covered">Fully covered by Inter</span>'
+                : m.fontGap.map(g => `<span class="badge badge-missing">${g}</span>`).join(' ')}
+            </td>
+            ${showIndia ? `<td><span class="badge badge-india">India fonts already in system</span></td>` : ''}
+          </tr>
+        </table>
+      </div>
+      ${currentMarket === 'kh' ? `
+      <div class="table-wrap" style="border-color:#f0c66e;">
+        <div class="table-title" style="background:#fff8e6;color:#7a4f00;">Khmer rendering notes</div>
+        <table class="ref-table">
+          <tr><td>Line height</td><td>Set to 1.8–2× Latin baseline. Stacking consonants are 3 layers tall.</td></tr>
+          <tr><td>Font size parity</td><td>Noto Sans Khmer at 16px reads smaller than Inter at 16px. Bump Khmer 1–2px.</td></tr>
+          <tr><td>OS fallback risk</td><td>Do not rely on system font fallback — it produces a different font on every platform. Explicitly assign Noto Sans Khmer.</td></tr>
+          <tr><td>Numerals</td><td>Khmer numerals (០–៩) exist but Arabic numerals are standard in digital UI.</td></tr>
+        </table>
+      </div>` : ''}
+      ${currentMarket === 'vn' ? `
+      <div class="table-wrap">
+        <div class="table-title">Vietnamese diacritic test characters</div>
+        <div style="padding:14px 16px;font-size:22px;line-height:2;background:var(--surface);">
+          ắ ặ ẳ ẵ ằ &nbsp; ấ ầ ẩ ẫ ậ &nbsp; ướ ược ưỡ &nbsp; ợ ở ỡ ờ ớ &nbsp; ệ ề ế ể ễ
+          <div style="font-size:13px;color:var(--ink3);margin-top:8px;">Worst cases: ợ ướ ặ ầ ệ — test at 12px, 14px, bold weight</div>
+        </div>
+      </div>` : ''}
+      <div class="table-wrap">
+        <div class="table-title">Notes</div>
+        <div style="padding:12px 16px;font-size:13px;background:var(--surface);color:var(--ink2);line-height:1.7;">${m.notes}</div>
+      </div>
+      ${renderTextExpansion()}
+    </div>
+
+    <div id="tab-icu" class="section ${activeTab==='icu'?'active':''}">
+      <div class="table-wrap">
+        <div class="table-title">ICU config</div>
+        <table class="ref-table">
+          <tr><th>Key</th><th>Value</th></tr>
+          <tr><td>BCP 47 locale</td><td class="mono">${m.icuLocale}</td></tr>
+          <tr><td>ISO 4217 currency</td><td class="mono">${m.icuCurrency}</td></tr>
+          <tr><td>Currency display</td><td class="mono">narrowSymbol</td></tr>
+        </table>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">JavaScript (Intl)</div>
+        <div class="code-block">
+<span class="cm">// Currency</span>
+<span class="ck">new</span> Intl.<span class="cs">NumberFormat</span>(<span class="cs">'${m.icuLocale}'</span>, {
+  <span class="ck">style</span>: <span class="cs">'currency'</span>,
+  <span class="ck">currency</span>: <span class="cs">'${m.icuCurrency}'</span>,
+  <span class="ck">currencyDisplay</span>: <span class="cs">'narrowSymbol'</span>,
+}).<span class="cs">format</span>(<span class="cn">1234.56</span>);
+
+<span class="cm">// Date</span>
+<span class="ck">new</span> Intl.<span class="cs">DateTimeFormat</span>(<span class="cs">'${m.icuLocale}'</span>, {
+  <span class="ck">day</span>: <span class="cs">'numeric'</span>,
+  <span class="ck">month</span>: <span class="cs">'short'</span>,
+}).<span class="cs">format</span>(<span class="ck">new</span> <span class="cs">Date</span>());
+
+<span class="cm">// Phone input — strip and reformat</span>
+<span class="ck">const</span> raw = input.<span class="cs">replace</span>(<span class="cn">/[^\\d+]/g</span>, <span class="cs">''</span>);
+</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">Android / Kotlin</div>
+        <div class="code-block">
+<span class="ck">val</span> formatter = NumberFormat
+  .<span class="cs">getCurrencyInstance</span>(Locale(<span class="cs">"${m.icuLocale.split('-')[0]}"</span>, <span class="cs">"${m.icuLocale.split('-')[1]}"</span>))
+formatter.currency = Currency.<span class="cs">getInstance</span>(<span class="cs">"${m.icuCurrency}"</span>)
+formatter.<span class="cs">format</span>(<span class="cn">1234.56</span>)
+</div>
+      </div>
+      <div class="table-wrap">
+        <div class="table-title">iOS / Swift</div>
+        <div class="code-block">
+<span class="ck">let</span> formatter = NumberFormatter()
+formatter.numberStyle = .<span class="cs">currency</span>
+formatter.locale = Locale(identifier: <span class="cs">"${m.icuLocale.replace('-','_')}"</span>)
+formatter.currencyCode = <span class="cs">"${m.icuCurrency}"</span>
+formatter.<span class="cs">string</span>(from: <span class="cn">1234.56</span>)
+</div>
+      </div>
+    </div>
+
+    <div id="tab-numbers" class="section ${activeTab==='numbers'?'active':''}">
+      ${renderNumbers(m, currentMarket, showIndia)}
+    </div>
+    <div id="tab-names" class="section ${activeTab==='names'?'active':''}">
+      ${renderNames(m, currentMarket)}
+      ${renderAddress(currentMarket)}
+    </div>
+    <div id="tab-payments" class="section ${activeTab==='payments'?'active':''}">
+      ${renderPayments(currentMarket)}
+    </div>
+    <div id="tab-messaging" class="section ${activeTab==='messaging'?'active':''}">
+      ${renderMessaging(currentMarket)}
+    </div>
+    <div id="tab-a11y" class="section ${activeTab==='a11y'?'active':''}">
+      ${renderA11y(currentMarket)}
+    </div>
+    <div id="tab-devices" class="section ${activeTab==='devices'?'active':''}">
+      ${renderDevices(currentMarket)}
+    </div>
+  `;
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === `tab-${tab}`));
+}
+
+// Initial render
+renderMarket();
+</script>
+</body>
+</html>
