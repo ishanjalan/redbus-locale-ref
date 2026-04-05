@@ -556,11 +556,9 @@
     <button class="nav-item" data-market="co" onclick="selectMarket('co', event)"><span class="flag">🇨🇴</span> Colombia</button>
     <button class="nav-item" data-market="pe" onclick="selectMarket('pe', event)"><span class="flag">🇵🇪</span> Peru</button>
   </div>
-  <div class="compare-toggle">
-    <label>
-      <input type="checkbox" id="compareToggle" onchange="toggleIndia()">
-      Compare with 🇮🇳 India
-    </label>
+  <div class="nav-section">
+    <div class="nav-label">Baseline</div>
+    <button class="nav-item" data-market="in" onclick="selectMarket('in', event)"><span class="flag">🇮🇳</span> India</button>
   </div>
 </nav>
 
@@ -578,6 +576,9 @@
       <option value="co">🇨🇴 Colombia</option>
       <option value="pe">🇵🇪 Peru</option>
     </optgroup>
+    <optgroup label="Baseline">
+      <option value="in">🇮🇳 India</option>
+    </optgroup>
   </select>
 </div>
 
@@ -587,20 +588,25 @@
 </div>
 
 <script>
-const INDIA = {
-  name: 'India', flag: '🇮🇳',
-  locale: 'en-IN', currency: 'INR',
-  currencySymbol: '₹', currencyPosition: 'Prefix, no space',
-  currencyExample: '₹1,23,456', currencySep: '. (period) = thousands, , (comma) = decimal',
-  dateFormat: 'DD MMM YYYY', timeFormat: '12h dominant', timezone: 'IST (UTC+5:30)',
-  phone: '+91 98765 43210', phoneRegex: '^\\+?91\\s?[6-9]\\d{4}\\s?\\d{5}$',
-  script: 'Latin (English UI) + Devanagari, Tamil, Telugu, Kannada, Malayalam for regional',
-  fonts: 'Inter (Latin), Noto Sans Devanagari, Noto Sans Tamil, Noto Sans Telugu etc.',
-  twelveHour: true, dstObserved: false, usdUsed: false,
-  notes: 'Lakh/crore numbering system (1,00,000 = 1 lakh). ₹ universally recognised.',
-};
-
 const MARKETS = {
+  in: {
+    name: 'India', flag: '🇮🇳', locale: 'en-IN', currency: 'INR',
+    currencySymbol: '₹', currencyPosition: 'Prefix, no space',
+    currencyExample: '₹1,23,456 · ₹25,000',
+    currencyNote: 'South Asian lakh/crore grouping system: 1,00,000 = 1 lakh; 1,00,00,000 = 1 crore. This 2-2-3 digit grouping is unique to India. Never use lakh/crore labels in international-facing UI.',
+    sep: ', (comma) thousands · . (period) decimal (South Asian grouping)',
+    dateFormat: 'D MMM (short) · D MMM YYYY (extended)',
+    timeFormat: '12h dominant',
+    timezone: 'IST (UTC+5:30)', dst: false,
+    phone: '98765 43210', phoneCC: '+91 98765 43210',
+    phoneRegex: '^\\+?91\\s?[6-9]\\d{4}\\s?\\d{5}$',
+    script: 'Latin (English UI) + Devanagari, Tamil, Telugu, Kannada, Malayalam, Bengali for regional',
+    fonts: 'Inter (Latin) + Noto Sans Devanagari · Noto Sans Tamil · Noto Sans Telugu · Noto Sans Kannada · Noto Sans Malayalam',
+    fontGap: ['Devanagari', 'Tamil', 'Telugu', 'Kannada', 'Malayalam'],
+    notes: 'English is the primary digital UI language. Regional language support significantly improves conversion for tier-2/3 cities. redBus is an established and trusted brand in India — different trust baseline than international markets.',
+    usdUsed: false, usdNote: null,
+    icuLocale: 'en-IN', icuCurrency: 'INR',
+  },
   sg: {
     name: 'Singapore', flag: '🇸🇬', locale: 'en-SG', currency: 'SGD',
     currencySymbol: 'S$', currencyPosition: 'Prefix, no space',
@@ -730,7 +736,6 @@ const MARKETS = {
 };
 
 let currentMarket = 'sg';
-let showIndia = false;
 
 function selectMarket(code, e) {
   currentMarket = code;
@@ -749,15 +754,6 @@ function selectMarketFromSelect(code) {
   renderMarket();
 }
 
-function toggleIndia() {
-  showIndia = document.getElementById('compareToggle').checked;
-  renderMarket();
-}
-
-function diff(intlVal, indiaVal) {
-  if (intlVal === indiaVal) return `<span class="diff-same">${intlVal}</span>`;
-  return `<span class="diff-diff">${intlVal}</span>`;
-}
 
 
 // ── NUMBER FORMATTING DATA ──
@@ -769,6 +765,7 @@ const NUM_DATA = {
   vn: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'nghìn',m:'triệu',ex:['120 nghìn ₫','1,2 triệu ₫'],note:'Vietnamese words standard. K/M acceptable in very informal UI only.'}, ordinal:{ex:['1.','thứ 1','thứ nhất'],note:'Period after number (1.) or "thứ" prefix for formal.'}, neg:{ex:['-120.000 ₫'],note:'Minus prefix. Period as thousands separator.'}, frac:{ex:['1,5 giờ','0,5 km'],note:'Comma as decimal in Vietnamese.'} },
   co: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['$1,2 mil','$4,5 millones'],note:'"mil" not K. "millones" not M. Very different from SEA.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Spanish ordinals use degree symbol. "primero/segundo" for formal.'}, neg:{ex:['-$1.234.567'],note:'Minus prefix. Period as thousands, comma as decimal.'}, frac:{ex:['1,5 horas','0,5 km'],note:'Comma as decimal.'} },
   pe: { sep:'comma/period', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['S/ 1,200','S/ 4,500'],note:'Write full number or "mil". Not K/M.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Same as Colombian Spanish.'}, neg:{ex:['-S/ 1,234.56'],note:'Minus prefix. Comma thousands, period decimal.'}, frac:{ex:['1.5 horas','0.5 km'],note:'Period as decimal (different from Colombia).'} },
+  in: { sep:'comma/period (South Asian grouping)', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'K or L (lakh)',m:'Cr (crore)',ex:['₹1.2K','₹1.5L','₹2.5Cr'],note:'K/M internationally; L (lakh = 100K) and Cr (crore = 10M) in Indian context. Never use L/Cr in international UI.'}, ordinal:{ex:['1st','2nd','3rd','4th'],note:'Standard English ordinals.'}, neg:{ex:['-₹12.50','(₹12.50)'],note:'Minus prefix standard. Parentheses for accounting contexts.'}, frac:{ex:['1.5 hrs','0.5 km'],note:'Decimal notation standard.'} },
 };
 
 // ── NAME / FORM DATA ──
@@ -780,6 +777,7 @@ const NAME_DATA = {
   vn: { order:'Family · Middle · Given (Nguyễn Văn An)', example:'Nguyễn Văn An — family name is Nguyễn', singleName:false, familyFirst:true, honorifics:'Anh (older male), Chị (older female), Em (younger), Ông (elderly male), Bà (elderly female)', formNotes:['Vietnamese names are family-name-first. Nguyễn Văn An: Nguyễn = family, Văn = middle, An = given name.','When addressed, Vietnamese use the given name (An), not the family name. Consider a "What should we call you?" field.','~40% of Vietnamese population shares the family name Nguyễn. Last name alone is not a useful identifier.','Full Vietnamese name with diacritics must be preserved exactly. Do not strip diacritics — names become legally incorrect.','Allow 80+ chars total.'], idTypes:['CCCD (Citizen ID card)','CMND (Old format ID)','Passport'] },
   co: { order:'Given · (Middle) · Paternal surname · Maternal surname', example:'María García López (two surnames)', singleName:false, familyFirst:false, honorifics:'Señor (Sr), Señora (Sra), Señorita (Srta)', formNotes:['Colombians typically have two surnames: paternal + maternal. A single "Last Name" field may frustrate users.','Full legal name includes both surnames. Booking name must match ID — use the full double surname.','Middle names are common. Name fields must accommodate 4+ words.','Allow 100+ chars total for name fields.'], idTypes:['Cédula de Ciudadanía','Pasaporte','Cédula de Extranjería'] },
   pe: { order:'Given · (Middle) · Paternal surname · Maternal surname', example:'Carlos Quispe Mamani (two surnames)', singleName:false, familyFirst:false, honorifics:'Señor (Sr), Señora (Sra)', formNotes:['Same double-surname structure as Colombia.','Indigenous Peruvian names (Quechua/Aymara origin): Quispe, Mamani, Condori are extremely common. Forms must not reject these.','Booking name must match DNI exactly. Quechua names sometimes differ between informal usage and official ID spelling.','Allow 100+ chars total.'], idTypes:['DNI (National ID)','Carné de Extranjería','Pasaporte'] },
+  in: { order:'Western (Given · Family) — varies significantly by region', example:'Rahul Sharma (North India) · R. Suresh (South India, initial = father\'s name)', singleName:false, familyFirst:false, honorifics:'Mr, Mrs, Ms, Dr — standard English. Shri/Smt in formal Hindi contexts.', formNotes:['South Indian names often use initials for father\'s name: "R. Suresh" where R = father\'s initial. A required "Last Name" field will confuse this pattern.','North Indian names follow Western order: Given + Family surname.','Some communities use caste-based surnames. Forms should not require surname for sensitive/privacy reasons.','Allow 80+ chars per field. Accept full Unicode including Devanagari, Tamil, Telugu scripts in name fields.','Middle names are uncommon but should be accommodated.'], idTypes:['Aadhaar Card (UID — 12 digit)','PAN Card','Passport','Voter ID (EPIC)','Driving Licence'] },
 };
 
 // ── PAYMENT DATA ──
@@ -791,6 +789,7 @@ const PAYMENT_DATA = {
   vn: [ {name:'MoMo',type:'E-wallet (dominant)',rank:1},{name:'ZaloPay',type:'E-wallet (Zalo/Tencent)',rank:1},{name:'VNPay QR',type:'Payment gateway & QR',rank:1},{name:'Bank transfer (Napas)',type:'Online banking / ATM',rank:1},{name:'ShopeePay',type:'E-wallet (Shopee)',rank:2},{name:'Visa / Mastercard',type:'Credit card (lower penetration)',rank:2},{name:'Cash on delivery',type:'COD — still significant for low-trust users',rank:2} ],
   co: [ {name:'Nequi',type:'E-wallet (Bancolombia) — ~54% penetration',rank:1},{name:'Daviplata',type:'E-wallet (Davivienda) — ~22% penetration',rank:1},{name:'Bre-B',type:'Central bank instant payment rail (launched Sept 2025)',rank:1},{name:'PSE',type:'Online bank transfer gateway',rank:1},{name:'Visa / Mastercard',type:'Credit & Debit card',rank:1},{name:'Efecty',type:'Cash payment at agent',rank:2},{name:'Bancolombia transfer',type:'Direct bank transfer',rank:2} ],
   pe: [ {name:'Yape',type:'E-wallet (BCP bank) — dominant',rank:1},{name:'Plin',type:'E-wallet (BBVA/Interbank/Scotiabank)',rank:1},{name:'Visa / Mastercard',type:'Credit & Debit card',rank:1},{name:'BCP bank transfer',type:'Direct bank transfer',rank:2},{name:'Agentes / PagoEfectivo',type:'Cash at agent — significant outside Lima',rank:2},{name:'American Express',type:'Credit card (lower share)',rank:2} ],
+  in: [ {name:'UPI (PhonePe, GPay, Paytm)',type:'Unified Payments Interface — dominant across all demographics',rank:1},{name:'PhonePe',type:'UPI + insurance + investments super-app',rank:1},{name:'Google Pay',type:'UPI-based payments',rank:1},{name:'Paytm',type:'Wallet + UPI + financial services',rank:1},{name:'RuPay card',type:'Indian domestic card network',rank:2},{name:'Visa / Mastercard',type:'Credit & Debit card',rank:2},{name:'Net Banking / IMPS',type:'Bank transfer',rank:2},{name:'Ola Money / Amazon Pay',type:'E-wallets',rank:2} ],
 };
 
 // ── DEVICE DATA (StatCounter + IDC 2025) ──
@@ -802,6 +801,7 @@ const DEVICE_DATA = {
   vn: { mobile:{android:66,ios:34}, desktop:{windows:79,macos:9,linux:3}, browser:{Chrome:65,Safari:33,'Samsung Internet':5,'Cốc Cốc':3}, mobileShare:87, topBrand:'Samsung, Xiaomi, Oppo, Vivo', minApi:'API 23 (Android 6) for safe coverage. iOS ~34% — higher than Indonesia. Test iOS seriously.', alert:'⚠ Vietnam has one of the highest mobile traffic shares globally (~87% of web traffic is mobile). iOS penetration is ~34% — significantly higher than Indonesia. Cốc Cốc (Vietnamese Chromium browser) has ~3% share — compatible but include in test matrix.' },
   co: { mobile:{android:79,ios:21}, desktop:{windows:74,macos:13,linux:4}, browser:{Chrome:86,Safari:11,Edge:4,'Samsung Internet':3}, mobileShare:58, topBrand:'Samsung, Xiaomi, Motorola', minApi:'API 23 (Android 6). Mid-range Android dominant. iOS ~21% — higher than most SEA markets.', alert:null },
   pe: { mobile:{android:81,ios:18}, desktop:{windows:76,macos:11,linux:4}, browser:{Chrome:83,Safari:16,Edge:4,'Samsung Internet':3}, mobileShare:50, topBrand:'Samsung, Xiaomi, Motorola, BLU', minApi:'API 21 (Android 5) for rural coverage. Progressive enhancement critical for low connectivity.', alert:'⚠ Peru has the lowest mobile traffic share of all 7 markets (~50% mobile). Desktop gets equal real-world usage — invest in the desktop experience. Rural Peru (outside Lima, Arequipa, Trujillo) has lower-end devices and patchy connectivity — these are exactly the long-distance bus travellers. Design offline-tolerant booking flows.' },
+  in: { mobile:{android:95,ios:4}, desktop:{windows:82,macos:8,linux:5}, browser:{Chrome:68,'Samsung Internet':8,'UC Browser':5,Safari:4,'Opera Mini':4}, mobileShare:80, topBrand:'Xiaomi (Redmi), Samsung, Realme, Vivo, OPPO', minApi:'API 21 (Android 5). Significant low-end Android segment — Xiaomi Redmi, Realme C-series, 2GB RAM devices are a real target.', alert:'⚠ India has the lowest iOS share of all 8 markets (~4%). Android dominates at 95%. UC Browser and Samsung Internet have meaningful share alongside Chrome. Optimise for 2G/3G connectivity in tier-2/3 cities — where long-distance bus travellers originate.' },
 };
 
 // ── A11Y DATA ──
@@ -886,6 +886,16 @@ const MESSAGING_DATA = {
     support: 'WhatsApp Business API is the primary business communication channel. Payment apps (Yape, Plin) use WhatsApp to share confirmations.',
     bizNote: 'Peru has among the highest WhatsApp session frequency in the world. Booking confirmations, support, and receipts sent via WhatsApp are not supplementary — they are expected as the primary channel.',
   },
+  in: {
+    apps: [
+      {name:'WhatsApp', share:'500M+ users — dominant', rank:1, note:'Primary for personal, work, and business communication. WhatsApp Business API widely used by Indian businesses for transactional notifications.'},
+      {name:'Telegram', share:'Growing rapidly', rank:1, note:'Tech community, news channels, community groups. Very significant in urban markets.'},
+      {name:'Signal', share:'Niche', rank:2, note:'Privacy-conscious users.'},
+    ],
+    otp: 'SMS OTP is the primary standard — RBI mandates SMS for banking/financial transactions. WhatsApp OTP growing for non-financial consumer apps.',
+    support: 'WhatsApp Business API is standard. In-app chat (Ola, Swiggy, Zomato pattern) is expected for ride/food/travel apps. SMS transactional messages remain a regulatory requirement for financial flows.',
+    bizNote: 'RBI/TRAI regulation mandates SMS for financial OTPs — WhatsApp cannot replace this layer for payments. For non-financial notifications (booking confirmation, reminders), WhatsApp is increasingly preferred over SMS. redBus already has established communication patterns in India — this is your known territory.',
+  },
 };
 
 // ── CALENDAR DATA ──
@@ -897,6 +907,7 @@ const CALENDAR_DATA = {
   vn: { firstDay: 'Sunday', isoWeek: false, dayNames: 'CN, T2, T3, T4, T5, T6, T7 (Vietnamese abbreviations)', note: 'Vietnamese: Chủ nhật (Sun), Thứ hai (Mon)…Thứ bảy (Sat). Calendars show Sunday first, but Monday is called "second day" linguistically (Thứ hai = ordinal 2).' },
   co: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Dom, Lun, Mar, Mié, Jue, Vie, Sáb (Spanish)', note: 'Spanish: Domingo (Sun), Lunes, Martes, Miércoles, Jueves, Viernes, Sábado. Week starts Sunday.' },
   pe: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Dom, Lun, Mar, Mié, Jue, Vie, Sáb (Spanish)', note: 'Same as Colombian Spanish. Domingo (Sunday) is the first day.' },
+  in: { firstDay: 'Sunday', isoWeek: false, dayNames: 'Sun, Mon, Tue, Wed, Thu, Fri, Sat (English)', note: 'Consumer calendars show Sunday first, same as most SEA markets. Most digital products use English day names.' },
 };
 
 // ── ADDRESS FORMAT DATA ──
@@ -943,6 +954,12 @@ const ADDRESS_DATA = {
     postalNote: '5-digit postal code. Optional in practice — district is more important for delivery.',
     notes: ['"Av." = Avenida. "Jr." = Jirón (unique multi-block street type in Peru/Bolivia). "Psje." = Pasaje (alley).', 'Lima addresses: city = Lima, province = Lima, department = Lima — all three levels named Lima. District (e.g., Miraflores, San Isidro, Surco) is required to disambiguate.', 'Rural Peruvian addresses are often imprecise — nearest town + landmark. Design for missing fields and provide a free-text notes field.'],
   },
+  in: {
+    fields: ['Flat/House No., Building Name', 'Street / Colony / Locality', 'City', 'State (required)', 'PIN Code (6 digits)'],
+    example: 'Flat 4B, Sunshine Apartments\n12, MG Road, Koramangala\nBengaluru, Karnataka 560034',
+    postalNote: '6-digit PIN code. First digit = postal zone (1–8). Build PIN → city/state autofill.',
+    notes: ['State is required — 28 states + 8 Union Territories. Use a searchable state dropdown.', 'Indian addresses are informal — landmarks ("near SBI Bank", "opp. City Mall") are widely used. Provide a "Landmark" field — all major Indian apps (Swiggy, Amazon IN, Zomato) include this.', 'Urban: flat + building + locality. Rural: often just village name + tehsil + district — design for graceful degradation.', 'Tier-2/3 city addresses are frequently incomplete — these are exactly the long-distance bus travellers.'],
+  },
 };
 
 // ── TEXT EXPANSION DATA ──
@@ -956,7 +973,7 @@ const TEXT_EXPANSION_DATA = [
 ];
 
 // ── RENDER FUNCTIONS ──
-function renderNumbers(m, code, india) {
+function renderNumbers(m, code) {
   const n = NUM_DATA[code];
   if (!n) return '';
   const sepRows = {
@@ -970,7 +987,6 @@ function renderNumbers(m, code, india) {
       <table class="ref-table">
         <tr><th>Market</th><th>1,000 written as</th><th>1.5 written as</th><th>Pattern</th></tr>
         <tr><td>${m.flag} ${m.name}</td><td class="mono">${sr.thou}</td><td class="mono">${sr.dec}</td><td class="note">${sr.label}</td></tr>
-        ${india ? '<tr style="background:#fff7ee"><td>🇮🇳 India</td><td class="mono diff-diff">1,00,000</td><td class="mono">1.5</td><td class="note diff-diff">South Asian grouping — 2-2-3 digits. Never use lakh/crore in international UI.</td></tr>' : ''}
       </table>
     </div>
     <div class="table-wrap">
@@ -994,7 +1010,6 @@ function renderNumbers(m, code, india) {
           <td>${n.abbr.ex.map(e=>`<span class="num-right">${e}</span>`).join(' &nbsp;')}</td>
           <td class="note">${n.abbr.note}</td>
         </tr>
-        ${india ? '<tr style="background:#fff7ee"><td colspan="4"><span class="badge badge-india">India uses L (lakh = 100K) and Cr (crore = 10M). Never use these in international UI.</span></td></tr>' : ''}
       </table>
     </div>
     <div class="table-wrap">
@@ -1310,6 +1325,26 @@ const CULTURE_DATA = {
     ],
     avoid: ['⚠ Snow or winter imagery in December — Christmas in Peru is summer (Southern Hemisphere)', '⚠ Underrepresenting Andean and indigenous identity — ~25% identify as indigenous, concentrated on the exact highland bus routes', 'Overly slick/luxury design language for rural route users — it can feel alienating for Andean communities', 'Using purple outside of October without the religious association — it is strongly tied to Señor de los Milagros'],
   },
+  in: {
+    colors: [
+      {swatch:'#FF9933', name:'Saffron / Orange', safe:true, meaning:'National flag (top stripe), Hinduism, courage, sacrifice', guidance:'Deeply positive and patriotic. One of the three national colours. Safe for festive and national campaigns.'},
+      {swatch:'#138808', name:'Green', safe:true, meaning:'National flag (bottom stripe), growth, prosperity, Islam (14% Muslim population)', guidance:'Positive and national. Used in Eid campaigns. Safe for success and growth states.'},
+      {swatch:'#FFD700', name:'Gold / Yellow', safe:true, meaning:'Diwali, weddings, prosperity, premium — the festive colour', guidance:'Very positive. Gold is the single most resonant festive colour in India. Use heavily for Diwali season and premium states.'},
+      {swatch:'#D0021B', name:'Red', safe:true, meaning:'Weddings, auspicious (Hindu tradition), love, Holi', guidance:'Positive and auspicious. Red is the colour of Hindu weddings and Holi. Fine as a primary CTA colour — redBus brand red already aligns here.'},
+      {swatch:'#FFFFFF', name:'White', safe:true, meaning:'Peace, purity, mourning (in some traditional contexts)', guidance:'Standard background. Mourning association exists but is not a dominant digital UI concern in modern India.'},
+    ],
+    trust: ['UPI badge (PhonePe, GPay, Paytm logos — instantly recognised)', 'RBI-regulated / SEBI-registered badge for financial services', 'redBus is already a trusted brand in India — leverage existing brand recognition', 'Large user counts ("5 crore+ users") — social proof with lakh/crore numbers resonates strongly', 'Aadhaar / DigiLocker integration badge for identity verification', 'Established Indian company logos (Tata, HDFC, SBI) as trust anchors'],
+    patterns: 'OLA and Uber set ride-booking mental models. Swiggy/Zomato for food. MakeMyTrip/redBus for travel — redBus is the established leader here. Dense, promotion-heavy interfaces with cashback banners and festive offers are expected. Bottom nav bar is standard. Price transparency and "best price guarantee" are strong conversion drivers. "Pay on bus" (cash/offline) option is expected for rural routes.',
+    tone: 'English is the dominant digital UI language. Hinglish ("Book karo", "Seedha jao", "Accha deal hai") is widely used in marketing for younger audiences. Formal English for transactional contexts. Regional language support (Hindi, Tamil, Telugu, Kannada, Bengali, Marathi) significantly improves conversion for tier-2/3 cities. Warm, friendly tone — not corporate.',
+    seasons: [
+      {name:'Diwali (Oct/Nov)', palette:'Gold, orange, red, diyas (oil lamps), rangoli', travel:'Major bus travel season. Families travel home across states. One of the two biggest booking events.'},
+      {name:'Holi (March)', palette:'Bright multicolour, water, spring', travel:'Moderate travel home, especially North India (UP, Rajasthan, Delhi).'},
+      {name:'Eid ul-Fitr (date varies)', palette:'Green, gold, crescent, star', travel:'Major travel event — Muslim community travel home. Significant in UP, Bihar, West Bengal, Hyderabad routes.'},
+      {name:'Summer school holidays (May–June)', palette:'Bright, travel-themed', travel:'Peak family travel season. Hill stations, pilgrimages, hometown visits. Significant for long-distance routes.'},
+      {name:'Christmas / New Year (Dec 25–Jan 1)', palette:'Red, gold, green, fireworks', travel:'Urban young adults travel. Goa, Kerala, Coorg, Shimla routes peak. Winter in North India.'},
+    ],
+    avoid: ['Saffron + green + white together may evoke the national flag — use the combination carefully in commercial contexts', 'Cow imagery in commercial/promotional contexts — highly politically and religiously sensitive', 'Avoid imagery that excludes major religious communities in national campaigns — India is multi-faith (Hindu ~80%, Muslim ~14%, Christian ~2.4%, Sikh ~1.7%)', 'Beef-related content in any form — deeply offensive to the majority Hindu population'],
+  },
 };
 
 function renderCulture(code) {
@@ -1493,50 +1528,12 @@ function renderMarket() {
   const activeTab = document.querySelector('.tab.active')?.dataset?.tab || 'currency';
   const main = document.getElementById('main');
 
-  const indiaStrip = showIndia ? `
-    <div class="india-strip visible">
-      <div class="india-strip-header">🇮🇳 India baseline</div>
-      <div class="india-grid">
-        <div class="india-cell">
-          <div class="india-cell-label">Currency</div>
-          <div class="india-cell-value">₹</div>
-          <div class="india-cell-sub">INR · Prefix, no space</div>
-        </div>
-        <div class="india-cell">
-          <div class="india-cell-label">Example</div>
-          <div class="india-cell-value">₹1,23,456</div>
-          <div class="india-cell-sub">Lakh/crore system</div>
-        </div>
-        <div class="india-cell">
-          <div class="india-cell-label">Time</div>
-          <div class="india-cell-value">12h</div>
-          <div class="india-cell-sub">IST (UTC+5:30)</div>
-        </div>
-        <div class="india-cell">
-          <div class="india-cell-label">Phone</div>
-          <div class="india-cell-value">+91</div>
-          <div class="india-cell-sub">98765 43210</div>
-        </div>
-        <div class="india-cell">
-          <div class="india-cell-label">Locale tag</div>
-          <div class="india-cell-value" style="font-size:13px">en-IN</div>
-          <div class="india-cell-sub">ICU currency: INR</div>
-        </div>
-        <div class="india-cell">
-          <div class="india-cell-label">Script</div>
-          <div class="india-cell-value" style="font-size:13px">Latin + Regional</div>
-          <div class="india-cell-sub">Devanagari, Tamil etc.</div>
-        </div>
-      </div>
-    </div>` : '';
 
   main.innerHTML = `
     <div class="page-header">
       <h1>${m.flag} ${m.name} <span class="locale-tag">${m.locale}</span></h1>
       <div class="sub">ICU currency code: <strong>${m.currency}</strong> · Timezone: ${m.timezone}${currentMarket==='kh' ? ' · <span class="badge badge-missing" style="vertical-align:middle">Mon-first calendar</span>' : ''}${m.usdUsed ? ' · <span class="badge badge-partial" style="vertical-align:middle">Dual currency (USD + KHR)</span>' : ''}</div>
     </div>
-
-    ${indiaStrip}
 
     <div class="tabs">
       <button class="tab ${activeTab==='currency'?'active':''}" data-tab="currency" onclick="switchTab('currency')">Currency</button>
@@ -1559,53 +1556,44 @@ function renderMarket() {
           <div class="info-card-label">Symbol</div>
           <div class="info-card-value">${m.currencySymbol}</div>
           <div class="info-card-sub">${m.currency} · ${m.currencyPosition}</div>
-          ${showIndia ? `<div class="info-card-note">India uses ₹ (INR) · ${diff(m.currencySymbol, '₹')} vs ₹</div>` : ''}
         </div>
         <div class="info-card">
           <div class="info-card-label">Formatted example</div>
           <div class="info-card-value" style="font-size:16px">${m.currencyExample.split('·')[0].trim()}</div>
           <div class="info-card-sub">${m.sep}</div>
-          ${showIndia ? `<div class="info-card-note">India: ₹1,23,456 (lakh system — grouping differs)</div>` : ''}
         </div>
       </div>
       <div class="table-wrap">
         <div class="table-title">Currency reference</div>
         <table class="ref-table">
-          <tr><th>Property</th><th>Value</th>${showIndia ? '<th>India</th>' : ''}</tr>
+          <tr><th>Property</th><th>Value</th></tr>
           <tr>
             <td>ISO code</td>
             <td class="mono">${m.currency}</td>
-            ${showIndia ? '<td class="mono diff-diff">INR</td>' : ''}
           </tr>
           <tr>
             <td>UI symbol</td>
             <td class="mono">${m.currencySymbol}</td>
-            ${showIndia ? `<td class="mono ${m.currencySymbol==='₹'?'diff-same':'diff-diff'}">₹</td>` : ''}
           </tr>
           <tr>
             <td>Position</td>
             <td>${m.currencyPosition}</td>
-            ${showIndia ? `<td class="${m.currencyPosition==='Prefix, no space'?'diff-same':'diff-diff'}">Prefix, no space</td>` : ''}
           </tr>
           <tr>
             <td>Thousands sep</td>
             <td class="mono">${m.sep.split('·')[0].trim()}</td>
-            ${showIndia ? `<td class="mono">, (comma)</td>` : ''}
           </tr>
           <tr>
             <td>Decimal sep</td>
             <td class="mono">${m.sep.split('·')[1]?.trim() || '—'}</td>
-            ${showIndia ? `<td class="mono">. (period)</td>` : ''}
           </tr>
           <tr>
             <td>Grouping system</td>
             <td>${currentMarket==='id'||currentMarket==='vn'||currentMarket==='co' ? '<span class="badge badge-partial">Period thousands · 1.234.567</span>' : 'Western — 1,234,567'}</td>
-            ${showIndia ? `<td class="diff-diff">South Asian — 1,23,456 (lakh grouping)</td>` : ''}
           </tr>
           <tr>
             <td>Decimals shown</td>
             <td>${currentMarket==='kh'||currentMarket==='vn'||currentMarket==='id' ? 'No — no meaningful subunit' : 'Yes — 2 decimal places'}</td>
-            ${showIndia ? `<td>Yes — 2 decimal places</td>` : ''}
           </tr>
         </table>
       </div>
@@ -1619,13 +1607,11 @@ function renderMarket() {
           <div class="info-card-label">Time convention</div>
           <div class="info-card-value">${m.timeFormat.includes('24')&&m.timeFormat.includes('12') ? '12h / 24h' : m.timeFormat.includes('24') ? '24h' : '12h'}</div>
           <div class="info-card-sub">${m.timeFormat}</div>
-          ${showIndia ? `<div class="info-card-note">India: 12h dominant ${diff(m.timeFormat, '12h dominant')}</div>` : ''}
         </div>
         <div class="info-card">
           <div class="info-card-label">Timezone</div>
           <div class="info-card-value" style="font-size:15px">${m.timezone.split('·')[0].trim()}</div>
           <div class="info-card-sub">${m.timezone}</div>
-          ${showIndia ? `<div class="info-card-note">India: IST (UTC+5:30) · ${diff(m.timezone.split('(')[1]?.replace(')','').trim(), 'UTC+5:30')}</div>` : ''}
         </div>
       </div>
       <div class="table-wrap">
@@ -1670,7 +1656,6 @@ function renderMarket() {
         <div class="info-card">
           <div class="info-card-label">With country code</div>
           <div class="info-card-value" style="font-size:16px">${m.phoneCC}</div>
-          ${showIndia ? `<div class="info-card-sub">India: +91 98765 43210</div>` : ''}
         </div>
       </div>
       <div class="table-wrap">
@@ -1701,12 +1686,10 @@ function renderMarket() {
           <tr>
             <td style="width:180px">Primary script</td>
             <td>${m.script}</td>
-            ${showIndia ? `<td>Latin + Devanagari + regional scripts</td>` : ''}
           </tr>
           <tr>
             <td>Required fonts</td>
             <td>${m.fonts}</td>
-            ${showIndia ? `<td>Inter + Noto Sans family</td>` : ''}
           </tr>
           <tr>
             <td>Font gaps</td>
@@ -1715,7 +1698,6 @@ function renderMarket() {
                 ? '<span class="badge badge-covered">Fully covered by Inter</span>'
                 : m.fontGap.map(g => `<span class="badge badge-missing">${g}</span>`).join(' ')}
             </td>
-            ${showIndia ? `<td><span class="badge badge-india">India fonts already in system</span></td>` : ''}
           </tr>
         </table>
       </div>
@@ -1796,7 +1778,7 @@ formatter.<span class="cs">string</span>(from: <span class="cn">1234.56</span>)
     </div>
 
     <div id="tab-numbers" class="section ${activeTab==='numbers'?'active':''}">
-      ${renderNumbers(m, currentMarket, showIndia)}
+      ${renderNumbers(m, currentMarket)}
     </div>
     <div id="tab-names" class="section ${activeTab==='names'?'active':''}">
       ${renderNames(m, currentMarket)}
