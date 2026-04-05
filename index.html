@@ -502,6 +502,50 @@
   .section.active { animation: fadein 0.18s ease; }
   @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
+  /* ── TOOL NAV ITEMS ── */
+  .nav-item.tool-btn { font-style: normal; }
+  .nav-item.tool-btn .tool-icon { font-size: 15px; line-height: 1; }
+
+  /* ── FORMATTER ── */
+  .fmt-mode-bar { display: flex; gap: 4px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .fmt-mode-btn { padding: 6px 16px; font-size: 13px; font-family: var(--sans); border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; background: var(--surface); color: var(--ink2); transition: all 0.12s; }
+  .fmt-mode-btn.active { background: var(--ink); color: white; border-color: var(--ink); }
+  .fmt-input { width: 100%; padding: 12px 16px; font-size: 22px; font-family: var(--mono); border: 2px solid var(--rule); border-radius: 10px; background: var(--surface); color: var(--ink); outline: none; transition: border-color 0.15s; margin-bottom: 6px; }
+  .fmt-input:focus { border-color: var(--red); }
+  .fmt-hint { font-size: 12px; color: var(--ink3); margin-bottom: 1.5rem; font-family: var(--mono); }
+  .fmt-result-table { width: 100%; border-collapse: collapse; }
+  .fmt-result-table th { font-size: 10px; font-family: var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); padding: 6px 12px; border-bottom: 1px solid var(--rule); text-align: left; font-weight: 400; white-space: nowrap; }
+  .fmt-row { border-bottom: 1px solid var(--rule); transition: background 0.1s; }
+  .fmt-row:last-child { border-bottom: none; }
+  .fmt-row:hover { background: var(--surface2); }
+  .fmt-market-cell { display: flex; align-items: center; gap: 8px; padding: 11px 12px; font-size: 13px; font-weight: 500; white-space: nowrap; }
+  .fmt-val { font-family: var(--mono); font-size: 16px; font-weight: 500; padding: 11px 12px; }
+  .fmt-val-secondary { font-family: var(--mono); font-size: 13px; color: var(--ink3); padding: 11px 12px; }
+  .fmt-note-cell { font-size: 11px; color: var(--ink3); padding: 11px 12px; white-space: nowrap; }
+  .fmt-empty { padding: 2.5rem; text-align: center; color: var(--ink3); font-size: 13px; }
+  .fmt-sub-row { background: #fffbeb !important; }
+
+  /* ── CAMPAIGN CALENDAR ── */
+  .cal-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1.5rem; padding: 12px 14px; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; align-items: center; }
+  .cal-legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; padding: 4px 8px; border-radius: 20px; border: 1px solid transparent; transition: all 0.12s; user-select: none; }
+  .cal-legend-item:hover { background: var(--surface2); }
+  .cal-legend-item.hidden { opacity: 0.3; }
+  .cal-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .cal-peak-key { margin-left: auto; display: flex; gap: 10px; font-size: 11px; color: var(--ink3); font-family: var(--mono); }
+  .cal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .cal-month { background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+  .cal-month.is-now { border-color: var(--red); box-shadow: 0 0 0 3px var(--red-dim); }
+  .cal-month-hdr { padding: 9px 12px; font-weight: 500; font-size: 13px; border-bottom: 1px solid var(--rule); display: flex; align-items: center; justify-content: space-between; background: var(--surface2); }
+  .now-pip { font-size: 9px; font-family: var(--mono); background: var(--red); color: white; padding: 2px 6px; border-radius: 3px; letter-spacing: 0.06em; }
+  .cal-chips { padding: 8px; display: flex; flex-direction: column; gap: 4px; min-height: 48px; }
+  .cal-chip { display: flex; align-items: center; gap: 6px; padding: 5px 8px; border-radius: 5px; font-size: 11px; line-height: 1.35; border-left: 3px solid; transition: transform 0.1s; cursor: default; }
+  .cal-chip:hover { transform: translateX(2px); }
+  .cal-chip-flag { font-size: 12px; flex-shrink: 0; }
+  .cal-chip-name { flex: 1; font-weight: 500; }
+  .cal-chip-icon { font-size: 11px; flex-shrink: 0; }
+  .cal-no-seasons { color: var(--ink3); font-size: 11px; padding: 8px; font-style: italic; }
+  @media (max-width: 700px) { .cal-grid { grid-template-columns: 1fr 1fr; } }
+
   /* ── TAB SCROLL (prevents wrap on narrow screens) ── */
   .tabs { overflow-x: auto; scrollbar-width: none; flex-wrap: nowrap; }
   .tabs::-webkit-scrollbar { display: none; }
@@ -560,6 +604,11 @@
     <div class="nav-label">Baseline</div>
     <button class="nav-item" data-market="in" onclick="selectMarket('in', event)"><span class="flag">🇮🇳</span> India</button>
   </div>
+  <div class="nav-section">
+    <div class="nav-label">Tools</div>
+    <button class="nav-item tool-btn" data-tool="formatter" onclick="showTool('formatter', event)"><span class="tool-icon">⌨</span> Formatter</button>
+    <button class="nav-item tool-btn" data-tool="calendar" onclick="showTool('calendar', event)"><span class="tool-icon">📅</span> Campaigns</button>
+  </div>
 </nav>
 
 <!-- ── MOBILE MARKET SELECT ── -->
@@ -578,6 +627,10 @@
     </optgroup>
     <optgroup label="Baseline">
       <option value="in">🇮🇳 India</option>
+    </optgroup>
+    <optgroup label="Tools">
+      <option value="formatter">⌨ Formatter</option>
+      <option value="calendar">📅 Campaigns</option>
     </optgroup>
   </select>
 </div>
@@ -736,9 +789,13 @@ const MARKETS = {
 };
 
 let currentMarket = 'sg';
+let currentTool = null;
+let fmtMode = 'currency';
+let hiddenMarkets = new Set();
 
 function selectMarket(code, e) {
   currentMarket = code;
+  currentTool = null;
   document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
   if (e && e.currentTarget) e.currentTarget.classList.add('active');
   const sel = document.querySelector('.mobile-market-select select');
@@ -747,11 +804,31 @@ function selectMarket(code, e) {
 }
 
 function selectMarketFromSelect(code) {
+  if (code === 'formatter' || code === 'calendar') {
+    showTool(code);
+    return;
+  }
   currentMarket = code;
+  currentTool = null;
   document.querySelectorAll('.nav-item').forEach(b => {
     b.classList.toggle('active', b.dataset.market === code);
   });
   renderMarket();
+}
+
+function showTool(name, e) {
+  currentTool = name;
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  if (e && e.currentTarget) e.currentTarget.classList.add('active');
+  else {
+    document.querySelectorAll('.nav-item[data-tool]').forEach(b => {
+      b.classList.toggle('active', b.dataset.tool === name);
+    });
+  }
+  const sel = document.querySelector('.mobile-market-select select');
+  if (sel) sel.value = name;
+  if (name === 'formatter') renderFormatter();
+  else if (name === 'calendar') renderCalendar();
 }
 
 
@@ -1806,6 +1883,313 @@ formatter.<span class="cs">string</span>(from: <span class="cn">1234.56</span>)
 function switchTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
   document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === `tab-${tab}`));
+}
+
+// ── SEASONS DATA (campaign calendar) ──
+const CAT_COLORS = {
+  'travel-peak':      { bg:'#fee2e2', border:'#ef4444', label:'Travel Peak' },
+  'festival':         { bg:'#fef3c7', border:'#f59e0b', label:'Festival' },
+  'religious':        { bg:'#ede9fe', border:'#8b5cf6', label:'Religious' },
+  'commercial':       { bg:'#dbeafe', border:'#3b82f6', label:'Commercial' },
+  'national-holiday': { bg:'#d1fae5', border:'#10b981', label:'National Holiday' },
+};
+
+const SEASONS = [
+  // Cross-market
+  { id:'cny', name:'Lunar New Year', icon:'🏮', cat:'travel-peak', months:[0,1], mkts:['sg','my','id','vn'], note:'SG/MY: 10–15% traffic spike. VN: Tết is the biggest travel event — intercity bus demand surges 3–4×. ID: Smaller but official public holiday.' },
+  { id:'hari-raya', name:'Hari Raya Idul Fitri', icon:'🌙', cat:'religious', months:[2,3], mkts:['sg','my','id'], note:'Mudik exodus in Indonesia — largest single domestic travel event. Multi-day school holiday in SG/MY. 2026: around Mar 30–31.' },
+  { id:'christmas', name:'Christmas & New Year', icon:'🎄', cat:'commercial', months:[11,0], mkts:['sg','my','id','co','pe','in'], note:'SG/MY/IN: major commercial campaign window. CO/PE: biggest family travel period of the year. ID: Smaller but growing.' },
+  // Southeast Asia
+  { id:'khmer-ny', name:'Khmer New Year', icon:'🎆', cat:'travel-peak', months:[3], mkts:['kh'], note:'3-day national holiday (Apr 13–15). Largest domestic travel event in Cambodia — bus demand peaks hard.' },
+  { id:'pchum-ben', name:'Pchum Ben', icon:'🙏', cat:'religious', months:[8,9], mkts:['kh'], note:'Buddhist ancestors festival. 3-day public holiday. Second biggest travel peak in Cambodia.' },
+  { id:'water-fest', name:'Water Festival', icon:'🚤', cat:'festival', months:[10], mkts:['kh'], note:'Bon Om Touk — 3 days around full moon (Nov). Large Phnom Penh event, travel peak from provinces.' },
+  { id:'vesak', name:'Vesak Day', icon:'☸️', cat:'religious', months:[4], mkts:['sg','my'], note:'Public holiday. Long-weekend travel trigger in SG and MY.' },
+  { id:'reunion-day', name:'Liberation Day', icon:'🇻🇳', cat:'national-holiday', months:[3], mkts:['vn'], note:'Apr 30 + May 1 — often a 4-day weekend. Significant domestic travel surge.' },
+  { id:'id-independence', name:'Indonesia Independence', icon:'🇮🇩', cat:'national-holiday', months:[7], mkts:['id'], note:'Aug 17 — long weekend trigger. Campaign moment for domestic travel.' },
+  { id:'sg-national', name:'Singapore National Day', icon:'🇸🇬', cat:'national-holiday', months:[7], mkts:['sg'], note:'Aug 9. Long weekend. Cross-causeway travel to MY spikes.' },
+  // LatAm
+  { id:'semana-santa', name:'Semana Santa', icon:'✝️', cat:'religious', months:[2,3], mkts:['co','pe'], note:'Holy Week (Palm Sunday → Easter). Biggest domestic travel event in CO and PE. School holidays. 2026: late March.' },
+  { id:'fiestas-patrias', name:'Fiestas Patrias', icon:'🇵🇪', cat:'travel-peak', months:[6], mkts:['pe'], note:'Jul 28–29 — Peru Independence Day. One of the highest bus travel peaks of the year. Major campaign window.' },
+  { id:'colombia-independence', name:'Colombia Independence', icon:'🇨🇴', cat:'national-holiday', months:[6], mkts:['co'], note:'Jul 20. Long weekend. Domestic road travel peaks noticeably.' },
+  { id:'day-of-dead', name:'Día de los Muertos', icon:'💀', cat:'festival', months:[10], mkts:['co','pe'], note:'Nov 1–2. Cultural observance. Short domestic travel to hometowns.' },
+  { id:'feria-cali', name:'Feria de Cali', icon:'💃', cat:'commercial', months:[11], mkts:['co'], note:'Dec 25–30. Major festival in Cali. Travel + commercial peak specifically in Colombia.' },
+  // India
+  { id:'holi', name:'Holi', icon:'🎨', cat:'festival', months:[2], mkts:['in'], note:'March (date varies). Interstate travel spikes — key campaign moment especially in North India.' },
+  { id:'eid-in', name:'Eid ul-Fitr', icon:'☪️', cat:'religious', months:[2,3], mkts:['in'], note:'Date varies by lunar calendar. Major travel event across Muslim-majority regions.' },
+  { id:'dussehra', name:'Navratri / Dussehra', icon:'🔱', cat:'festival', months:[9], mkts:['in'], note:'Oct. Interstate travel. Key campaign window — redBus IN peak period.' },
+  { id:'diwali', name:'Diwali', icon:'🪔', cat:'travel-peak', months:[9,10], mkts:['in'], note:'Oct/Nov. Single biggest bus travel event in India. Campaign peak for redBus IN.' },
+];
+
+// ── FORMATTER ──
+function renderFormatter() {
+  const main = document.getElementById('main');
+  const modes = [
+    { id:'currency', label:'Currency' },
+    { id:'number',   label:'Number' },
+    { id:'date',     label:'Date' },
+    { id:'time',     label:'Time' },
+    { id:'datetime', label:'Date + Time' },
+  ];
+  const modeBar = modes.map(md =>
+    `<button class="fmt-mode-btn${fmtMode===md.id?' active':''}" onclick="setFmtMode('${md.id}')">${md.label}</button>`
+  ).join('');
+
+  const isNumeric = fmtMode === 'currency' || fmtMode === 'number';
+  const placeholder = fmtMode === 'currency' || fmtMode === 'number'
+    ? 'Type a number — e.g. 1234.56 or 50000'
+    : fmtMode === 'date'
+      ? 'Type a date — e.g. 2026-04-05'
+      : fmtMode === 'time'
+        ? 'Type a time — e.g. 20:15'
+        : 'Type date+time — e.g. 2026-04-05T20:15';
+
+  const defaultVal = fmtMode === 'currency' || fmtMode === 'number' ? '1234.56'
+    : fmtMode === 'date' ? '2026-04-05'
+    : fmtMode === 'time' ? '20:15'
+    : '2026-04-05T20:15';
+
+  main.innerHTML = `
+    <div class="page-header">
+      <h1>⌨ Live Locale Formatter</h1>
+      <div class="sub">Type any number, date, or time — see how every market renders it instantly using real browser Intl APIs.</div>
+    </div>
+    <div class="fmt-mode-bar">${modeBar}</div>
+    <input id="fmt-input" class="fmt-input" type="text"
+      placeholder="${placeholder}"
+      oninput="updateFormatter()"
+      value="${defaultVal}">
+    <div class="fmt-hint" id="fmt-hint"></div>
+    <div class="table-wrap">
+      <table class="fmt-result-table">
+        <thead><tr>
+          <th>Market</th>
+          <th>${isNumeric ? 'Formatted' : 'Short format'}</th>
+          <th>${isNumeric ? 'Manual symbol' : 'Long / extended'}</th>
+          <th>Notes</th>
+        </tr></thead>
+        <tbody id="fmt-results"></tbody>
+      </table>
+    </div>
+  `;
+  updateFormatter();
+}
+
+function setFmtMode(mode) {
+  fmtMode = mode;
+  renderFormatter();
+}
+
+function updateFormatter() {
+  const inp = document.getElementById('fmt-input');
+  const tbody = document.getElementById('fmt-results');
+  const hint = document.getElementById('fmt-hint');
+  if (!inp || !tbody) return;
+
+  const raw = inp.value.trim();
+  if (!raw) {
+    tbody.innerHTML = '<tr><td colspan="4" class="fmt-empty">Start typing above ↑</td></tr>';
+    if (hint) hint.textContent = '';
+    return;
+  }
+
+  const ORDER = ['sg','my','id','kh','vn','co','pe','in'];
+  let rows = '';
+
+  if (fmtMode === 'currency' || fmtMode === 'number') {
+    const num = parseFloat(raw.replace(/[,\s]/g, ''));
+    if (isNaN(num)) {
+      tbody.innerHTML = '<tr><td colspan="4" class="fmt-empty">Enter a valid number (e.g. 1234.56)</td></tr>';
+      if (hint) hint.textContent = '';
+      return;
+    }
+    if (hint) hint.textContent = 'Parsed: ' + num;
+    for (const code of ORDER) {
+      const m = MARKETS[code];
+      let primary = '—', secondary = '—', note = '';
+      try {
+        if (fmtMode === 'currency') {
+          primary = new Intl.NumberFormat(m.icuLocale, {
+            style: 'currency', currency: m.icuCurrency, currencyDisplay: 'narrowSymbol',
+          }).format(num);
+          secondary = new Intl.NumberFormat(m.icuLocale).format(num);
+          note = m.currency + ' · ' + m.currencyPosition;
+        } else {
+          primary = new Intl.NumberFormat(m.icuLocale).format(num);
+          secondary = new Intl.NumberFormat(m.icuLocale, { notation:'compact', compactDisplay:'short' }).format(num);
+          note = (NUM_DATA[code] && NUM_DATA[code].sep) || '';
+        }
+      } catch(err) { primary = '(unsupported)'; }
+      rows += `<tr class="fmt-row">
+        <td class="fmt-market-cell">${m.flag} ${m.name}</td>
+        <td class="fmt-val">${primary}</td>
+        <td class="fmt-val-secondary">${secondary}</td>
+        <td class="fmt-note-cell">${note}</td>
+      </tr>`;
+      if (code === 'kh' && fmtMode === 'currency') {
+        try {
+          const usd = new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',currencyDisplay:'narrowSymbol'}).format(num/4100);
+          rows += `<tr class="fmt-row fmt-sub-row">
+            <td class="fmt-market-cell" style="padding-left:28px;opacity:0.65">↳ USD equiv.</td>
+            <td class="fmt-val" style="font-size:13px">${usd}</td>
+            <td class="fmt-val-secondary">÷ 4,100 KHR/USD</td>
+            <td class="fmt-note-cell">Dual-currency market</td>
+          </tr>`;
+        } catch(e) {}
+      }
+    }
+
+  } else if (fmtMode === 'date') {
+    let d = null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+      const [y,mo,dy] = raw.split('-').map(Number);
+      d = new Date(y, mo-1, dy);
+    } else { d = new Date(raw); }
+    if (!d || isNaN(d.getTime())) {
+      tbody.innerHTML = '<tr><td colspan="4" class="fmt-empty">Enter a date (e.g. 2026-04-05)</td></tr>';
+      if (hint) hint.textContent = ''; return;
+    }
+    if (hint) hint.textContent = 'Parsed: ' + d.toDateString();
+    for (const code of ORDER) {
+      const m = MARKETS[code];
+      let short = '—', long = '—';
+      try {
+        short = new Intl.DateTimeFormat(m.icuLocale, { day:'numeric', month:'short' }).format(d);
+        long  = new Intl.DateTimeFormat(m.icuLocale, { weekday:'short', day:'numeric', month:'short', year:'numeric' }).format(d);
+      } catch(e) { short = '(unsupported)'; }
+      rows += `<tr class="fmt-row">
+        <td class="fmt-market-cell">${m.flag} ${m.name}</td>
+        <td class="fmt-val">${short}</td>
+        <td class="fmt-val-secondary">${long}</td>
+        <td class="fmt-note-cell">${m.dateFormat || ''}</td>
+      </tr>`;
+    }
+
+  } else if (fmtMode === 'time') {
+    const match = raw.match(/^(\d{1,2}):(\d{2})$/);
+    if (!match) {
+      tbody.innerHTML = '<tr><td colspan="4" class="fmt-empty">Enter time as HH:MM (e.g. 20:15)</td></tr>';
+      if (hint) hint.textContent = ''; return;
+    }
+    const d = new Date(); d.setHours(+match[1], +match[2], 0, 0);
+    if (hint) hint.textContent = 'Parsed: ' + d.toTimeString().slice(0,5);
+    for (const code of ORDER) {
+      const m = MARKETS[code];
+      const use12 = m.timeFormat.includes('12');
+      let t12 = '—', t24 = '—';
+      try {
+        t12 = new Intl.DateTimeFormat(m.icuLocale, { hour:'numeric', minute:'2-digit', hour12:true  }).format(d);
+        t24 = new Intl.DateTimeFormat(m.icuLocale, { hour:'numeric', minute:'2-digit', hour12:false }).format(d);
+      } catch(e) { t12 = '(unsupported)'; }
+      rows += `<tr class="fmt-row">
+        <td class="fmt-market-cell">${m.flag} ${m.name}</td>
+        <td class="fmt-val">${use12 ? t12 : t24}</td>
+        <td class="fmt-val-secondary">${use12 ? t24 : t12}</td>
+        <td class="fmt-note-cell">${m.timeFormat}</td>
+      </tr>`;
+    }
+
+  } else if (fmtMode === 'datetime') {
+    let d = null;
+    if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(raw)) {
+      d = new Date(raw);
+    } else { d = new Date(raw); }
+    if (!d || isNaN(d.getTime())) {
+      tbody.innerHTML = '<tr><td colspan="4" class="fmt-empty">Enter date+time (e.g. 2026-04-05T20:15)</td></tr>';
+      if (hint) hint.textContent = ''; return;
+    }
+    if (hint) hint.textContent = 'Parsed: ' + d.toLocaleString();
+    for (const code of ORDER) {
+      const m = MARKETS[code];
+      const use12 = m.timeFormat.includes('12');
+      let short = '—', long = '—';
+      try {
+        short = new Intl.DateTimeFormat(m.icuLocale, { day:'numeric', month:'short', hour:'numeric', minute:'2-digit', hour12:use12 }).format(d);
+        long  = new Intl.DateTimeFormat(m.icuLocale, { weekday:'short', day:'numeric', month:'short', year:'numeric', hour:'numeric', minute:'2-digit', hour12:use12 }).format(d);
+      } catch(e) { short = '(unsupported)'; }
+      rows += `<tr class="fmt-row">
+        <td class="fmt-market-cell">${m.flag} ${m.name}</td>
+        <td class="fmt-val">${short}</td>
+        <td class="fmt-val-secondary">${long}</td>
+        <td class="fmt-note-cell">${m.timezone.split('·')[0].trim()}</td>
+      </tr>`;
+    }
+  }
+
+  tbody.innerHTML = rows || '<tr><td colspan="4" class="fmt-empty">No results</td></tr>';
+}
+
+// ── CAMPAIGN CALENDAR ──
+function toggleMarketFilter(code) {
+  if (hiddenMarkets.has(code)) hiddenMarkets.delete(code);
+  else hiddenMarkets.add(code);
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const main = document.getElementById('main');
+  const now = new Date();
+  const thisMonth = now.getMonth();
+  const thisYear = now.getFullYear();
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  // Legend: category types
+  const catLegend = Object.entries(CAT_COLORS).map(([cat, c]) =>
+    `<div class="cal-legend-item" style="border-color:${c.border}20">
+      <div class="cal-legend-dot" style="background:${c.border}"></div>
+      ${c.label}
+    </div>`
+  ).join('');
+
+  // Legend: market filter buttons
+  const mktLegend = Object.entries(MARKETS).map(([code, m]) => {
+    const hidden = hiddenMarkets.has(code);
+    return `<div class="cal-legend-item${hidden?' hidden':''}" onclick="toggleMarketFilter('${code}')" title="Toggle ${m.name}">
+      <span>${m.flag}</span> ${m.name}
+    </div>`;
+  }).join('');
+
+  // Build month grid
+  let monthsHtml = '';
+  for (let mo = 0; mo < 12; mo++) {
+    const isNow = mo === thisMonth;
+    const events = SEASONS.filter(ev => ev.months.includes(mo));
+    let chipsHtml = '';
+    for (const ev of events) {
+      const visibleMkts = ev.mkts.filter(code => !hiddenMarkets.has(code));
+      if (!visibleMkts.length) continue;
+      const c = CAT_COLORS[ev.cat] || CAT_COLORS['festival'];
+      const flags = visibleMkts.map(code => MARKETS[code].flag).join('');
+      chipsHtml += `<div class="cal-chip" style="background:${c.bg};border-left-color:${c.border}" title="${ev.note}">
+        <span class="cal-chip-flag">${flags}</span>
+        <span class="cal-chip-name">${ev.name}</span>
+        <span class="cal-chip-icon">${ev.icon}</span>
+      </div>`;
+    }
+    if (!chipsHtml) chipsHtml = '<div class="cal-no-seasons">Quiet month</div>';
+
+    monthsHtml += `<div class="cal-month${isNow?' is-now':''}">
+      <div class="cal-month-hdr">
+        <span>${MONTH_NAMES[mo]}${isNow ? ' <span class="now-pip">NOW</span>' : ''}</span>
+        <span style="font-size:11px;color:var(--ink3);font-family:var(--mono);font-weight:400">${thisYear}</span>
+      </div>
+      <div class="cal-chips">${chipsHtml}</div>
+    </div>`;
+  }
+
+  main.innerHTML = `
+    <div class="page-header">
+      <h1>📅 Campaign Calendar</h1>
+      <div class="sub">Key travel peaks, cultural festivals &amp; commercial seasons across all 8 markets · ${thisYear}</div>
+    </div>
+    <div class="cal-legend">
+      <span style="font-size:10px;color:var(--ink3);font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;align-self:center;margin-right:2px">Type</span>
+      ${catLegend}
+      <span style="width:1px;background:var(--rule);margin:0 6px;align-self:stretch"></span>
+      <span style="font-size:10px;color:var(--ink3);font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;align-self:center;margin-right:2px">Filter</span>
+      ${mktLegend}
+    </div>
+    <div class="cal-grid">${monthsHtml}</div>
+  `;
 }
 
 // Initial render
