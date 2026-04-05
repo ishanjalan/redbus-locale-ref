@@ -1184,6 +1184,190 @@ function renderDevices(code) {
 }
 
 
+// ── DESIGN CULTURE DATA ──
+const CULTURE_DATA = {
+  sg: {
+    colors: [
+      {swatch:'#D0021B', name:'Red', safe:true, meaning:'Lucky, prosperity (Chinese influence ~74% of pop.)', guidance:'Positive for CTAs and success states. Universally well-received.'},
+      {swatch:'#FFD700', name:'Gold / Yellow', safe:true, meaning:'Prosperity, auspicious, Chinese New Year', guidance:'Safe for premium tiers and success states.'},
+      {swatch:'#22AA44', name:'Green', safe:true, meaning:'Islam (Malay community ~14%), nature, growth', guidance:'Positive. Used in Hari Raya seasonal campaigns for Malay-Muslim audience.'},
+      {swatch:'#FFFFFF', name:'White', safe:true, meaning:'Clean, modern — no mourning association in SG context', guidance:'Standard background. Fine for UI.'},
+      {swatch:'#000000', name:'Black', safe:true, meaning:'Sophisticated, premium', guidance:'Fine for UI. No mourning taboo in modern SG digital context.'},
+    ],
+    trust: ['High-polish, error-free UI — visual quality itself signals trustworthiness more here than any other market', 'PayNow logo (MAS-endorsed, near-universal)', 'MAS-regulated badge for financial services', 'PDPA compliance statement (Personal Data Protection Act)', 'Visa / Mastercard secure badges', 'User review counts and star ratings'],
+    patterns: 'Grab is the primary super-app mental model (ride + food + payments in one). Users expect smooth, fast flows with minimal friction. Singapore users are most accepting of English-only UI in SEA. Progress indicators on multi-step flows are expected. Minimalist, clean design is perceived as premium — clutter signals low quality here.',
+    tone: 'English, professional but approachable. Singlish ("lah", "lor", "sia") is understood and warm in marketing copy, but never in transactional UI (checkout, error messages). Bilingual campaigns (English + Mandarin) are common for broader reach. CTAs should be direct and action-oriented.',
+    seasons: [
+      {name:'Chinese New Year (Jan/Feb)', palette:'Red, gold, lantern motifs', travel:'Moderate — family visits within SG and to Malaysia. Slight booking uptick.'},
+      {name:'Hari Raya Aidilfitri (post-Ramadan)', palette:'Green, gold, ketupat motifs', travel:'Significant — Malay community travel to Malaysia for Balik Kampung. Bus routes to Johor Bahru peak.'},
+      {name:'Deepavali (Oct/Nov)', palette:'Warm orange, gold, oil lamp motifs', travel:'Low travel impact but high commercial season for Indian community.'},
+    ],
+    avoid: ['Never show imagery representing only one ethnicity — SG is officially multi-racial and this is legally and socially significant', 'Do not use red/white in combinations that evoke the Singapore flag in commercial contexts', 'Singlish in formal/transactional UI feels unprofessional'],
+  },
+  my: {
+    colors: [
+      {swatch:'#22AA44', name:'Green', safe:true, meaning:'Islam (63% Muslim population), national colour, nature', guidance:'The single most culturally resonant positive colour for the majority demographic. Use in Hari Raya seasonal design.'},
+      {swatch:'#D0021B', name:'Red', safe:true, meaning:'National flag colour, luck (Chinese community)', guidance:'Safe for CTAs. Positive across all communities.'},
+      {swatch:'#FFD700', name:'Yellow / Gold', safe:false, meaning:'⚠ Royal colour — associated with Malay royalty and the Sultan', guidance:'⚠ Avoid yellow as a dominant brand or UI colour. It has strong royal connotations. Safe as a small accent or for gold/premium states only.'},
+      {swatch:'#FFFFFF', name:'White', safe:true, meaning:'Purity, cleanliness', guidance:'Standard background. No mourning association.'},
+    ],
+    trust: ['Touch \'n Go eWallet logo (YouGov #1 payment brand)', 'DuitNow logo (Bank Negara-backed = government trust)', 'Maybank / CIMB / Public Bank logos', 'Halal certification badge (essential for food/lifestyle)', 'Bumiputera-friendly or government-endorsed messaging where relevant', 'FPX badge for online banking checkout'],
+    patterns: 'Touch \'n Go evolved into a super-app — users are habituated to wallet + transport + lifestyle in one. App density is higher than SG — information-rich layouts are acceptable. Bahasa Melayu UI is expected for Malay users; English-only can alienate ~63% Bumiputera population. Bottom navigation and icon grids (like Grab) are the standard pattern.',
+    tone: '"Anda" is formal/standard in UI copy. "Awak" is warmer and more personal for consumer contexts. Mixing English + BM is extremely natural and common (Manglish) — "Jom book now!" is not unusual in marketing. Greetings matter: "Selamat datang" in onboarding. During Ramadan: "Selamat berpuasa". Post-Ramadan: "Selamat Hari Raya, Maaf Zahir & Batin".',
+    seasons: [
+      {name:'Hari Raya Aidilfitri (post-Ramadan)', palette:'Green, gold, ketupat, pelita lamp motifs', travel:'⚠ Biggest bus booking event of the year. "Balik Kampung" (going home) — tickets sell out weeks ahead. 50–100% price spike on KL → Penang / KL → Kelantan routes.'},
+      {name:'Chinese New Year (Jan/Feb)', palette:'Red, gold, ang pau motifs', travel:'Significant — Chinese community (23%) travel to hometowns. Cross-state routes peak.'},
+      {name:'Deepavali (Oct/Nov)', palette:'Warm orange, gold, kolam motifs', travel:'Moderate — Indian community (7%) travel.'},
+    ],
+    avoid: ['⚠ Yellow as a dominant brand colour has royal connotations — avoid', 'Showing Malay women without hijab in representative imagery is culturally incorrect for the majority demographic', 'Do not depict alcohol or pork in product imagery — Muslim-majority market', 'Imagery that exclusively represents one of the three main ethnic groups (Malay, Chinese, Indian) will be noticed negatively by the other two'],
+  },
+  id: {
+    colors: [
+      {swatch:'#D0021B', name:'Red', safe:false, meaning:'National flag colour — but red + white = Indonesian flag', guidance:'⚠ Never use red and white together as a design motif — this directly echoes the national flag (Sang Merah Putih) and can be seen as inappropriate commercial use of a sacred national symbol.'},
+      {swatch:'#22AA44', name:'Green', safe:true, meaning:'Islam (~87% Muslim population), nature, growth', guidance:'Very positive for Ramadan/Eid context and general UI. Safe as a success or positive state colour.'},
+      {swatch:'#FFD700', name:'Gold', safe:true, meaning:'Prosperity, prestige, Batik cultural motifs', guidance:'Safe for premium tiers. Gold in Batik patterns is culturally resonant.'},
+      {swatch:'#00CED1', name:'Aqua / Teal', safe:false, meaning:'⚠ Taboo in Javanese coastal culture — associated with Nyai Loro Kidul (Queen of the South Sea)', guidance:'⚠ Avoid aqua and teal tones. This applies particularly to Javanese users (~32% of population). Use standard mid-green instead.'},
+    ],
+    trust: ['QRIS badge (Bank Indonesia-mandated, government-backed = #1 trust signal)', 'BCA / Mandiri / BRI / BNI bank logos (established institutions)', '"10 juta pengguna" style social proof — Indonesians respond very strongly to large user counts', 'OJK (Otoritas Jasa Keuangan) regulatory badge for fintech', '"Terpercaya" (trusted) badge or verified partner logo', 'Alfamart / Indomaret logos for cash payment trust with lower-income users'],
+    patterns: 'Gojek is the primary super-app mental model — dense, icon-grid home screens with many services in one app. Tokopedia for e-commerce. Dense, promotion-heavy layouts with banners are normal and expected — minimalism reads as empty or unfinished. Bottom navigation bars with 5 items are standard. Users expect persistent promotional banners on home screens.',
+    tone: '"Anda" for formal UI (banking, insurance, legal contexts). "Kamu" for casual consumer apps targeting under-35s. Greetings warm the experience: "Halo, [nama]!" is better than just displaying a name. Error messages should apologise: "Maaf, terjadi kesalahan" (Sorry, an error occurred). "Selamat" for celebration states. Avoid overly clipped, English-style error copy.',
+    seasons: [
+      {name:'Lebaran / Hari Raya Idul Fitri (post-Ramadan)', palette:'Green, gold, ketupat, masjid (mosque) motifs', travel:'⚠ Mudik is the world\'s largest annual human migration — 143M+ travellers in 2024. Every bus route sells out. Start promoting 4–6 weeks ahead. "Mudik bersama redBus" is a natural campaign frame.'},
+      {name:'Ramadan (month before Hari Raya)', palette:'Green, gold, lantern (lentera), crescent motifs', travel:'Pre-Mudik booking season. Iftar deal bundling.'},
+      {name:'Independence Day (Aug 17)', palette:'Red and white — use very carefully (flag colours)', travel:'Moderate travel uptick for family gatherings.'},
+      {name:'Christmas / New Year (Dec)', palette:'Standard Western festive', travel:'Significant for non-Muslim communities in Bali, NTT, Papua (~12% Christian).'},
+    ],
+    avoid: ['⚠ Red + white together = Indonesian flag — avoid as a general UI or campaign motif', '⚠ Aqua / teal — taboo in Javanese coastal context (Nyai Loro Kidul). Use mid-green instead', 'Pork or alcohol imagery — overwhelmingly Muslim market', 'Overly minimal UI — users may perceive it as incomplete or unpolished', 'Never use a required last name field — 15–20% of Indonesians are legally mononymous (one name only)'],
+  },
+  kh: {
+    colors: [
+      {swatch:'#FF8C00', name:'Saffron / Orange', safe:false, meaning:'⚠ Buddhist monks\' robes — sacred colour (~95% Theravada Buddhist)', guidance:'⚠ Never use saffron or orange for CTAs, error states, discount badges, or as a brand accent. This is the most sacred colour in Cambodian culture.'},
+      {swatch:'#FFD700', name:'Gold', safe:true, meaning:'Buddhism, royalty, prosperity — the premium/trust colour', guidance:'Very positive for premium tiers, success states, and trust-building elements.'},
+      {swatch:'#D0021B', name:'Red', safe:true, meaning:'National flag colour, luck, energy', guidance:'Safe for CTAs and highlight states. Positive.'},
+      {swatch:'#FFFFFF', name:'White', safe:false, meaning:'Mourning — particularly during Pchum Ben (ancestor festival)', guidance:'⚠ Fine for UI backgrounds year-round, but avoid white-dominant celebratory or success designs during Pchum Ben season (Sep–Oct). White flowers = funeral.'},
+    ],
+    trust: ['ABA Bank logo (most recognised financial brand in Cambodia — #1 and #2 apps on both Play Store and App Store)', 'KHQR badge (National Bank of Cambodia — highest possible endorsement)', 'Bilingual UI (Khmer + English) signals professionalism and legitimacy', 'Facebook Page verified badge — many users verify businesses via Facebook before transacting', 'Wing Bank agents logo for rural payment trust'],
+    patterns: 'Facebook is a primary commerce and trust-verification channel — many Cambodian businesses exist only as Facebook Pages. Users verify business legitimacy by checking the Facebook Page before visiting the website. Messenger and Telegram are the support channels (not WhatsApp). Mobile with high iOS share (~40%) — design at iOS quality standards. Users transact in both KHR and USD in the same flow.',
+    tone: 'Khmer has formal honorific levels. Even casual digital apps maintain some formality ("លោក/លោកស្រី" Mr/Ms in forms). Young urban Cambodians (18–30) in Phnom Penh code-switch to English comfortably — English UI is often seen as more trustworthy than Khmer UI for tech products. Outside Phnom Penh, Khmer is essential.',
+    seasons: [
+      {name:'Khmer New Year (April 13–15)', palette:'Bright colours, water, floral motifs', travel:'⚠ Major bus travel event. Families travel to provinces. Phnom Penh empties out — routes to Siem Reap, Battambang, Kampot peak.'},
+      {name:'Pchum Ben (Sep/Oct — 15 days)', palette:'White, offerings, monks — solemn', travel:'Significant travel to home provinces for ancestral offerings. Avoid promotional/celebratory tone in UI during this period.'},
+      {name:'Water Festival / Bon Om Touk (Nov)', palette:'Blue, water, boat racing', travel:'Phnom Penh fills up for races. Short-distance routes peak.'},
+    ],
+    avoid: ['⚠ Saffron/orange in ANY commercial UI context — it is the colour of monks\' robes', '⚠ White-dominant celebratory screens during Pchum Ben (Sep–Oct) — white = mourning', 'Assuming WhatsApp is the primary messaging channel — Telegram and Facebook Messenger are #1 and #2 here', 'Do not price exclusively in USD — KHR is culturally important even if USD is used commercially'],
+  },
+  vn: {
+    colors: [
+      {swatch:'#D0021B', name:'Red', safe:true, meaning:'Lucky, prosperity, weddings, Tết — the most auspicious colour', guidance:'Red CTAs are culturally positive in Vietnam. Red does NOT carry danger/error meaning here. Use freely for primary actions and festive states.'},
+      {swatch:'#FFD700', name:'Gold / Yellow', safe:true, meaning:'Wealth, auspicious, Tết — paired with red as the festive palette', guidance:'Very positive for success states, premium, and Tết campaigns. Red + gold = the classic Vietnamese celebration palette.'},
+      {swatch:'#FFFFFF', name:'White', safe:false, meaning:'⚠ Death, mourning — significant cultural taboo', guidance:'⚠ Fine for UI backgrounds, but never use white as a dominant colour for success screens, celebratory states, or Tết campaigns. White flowers = funeral. Avoid in festive design.'},
+      {swatch:'#22AA44', name:'Green', safe:true, meaning:'Growth, youth, nature — positive', guidance:'Safe as a general positive/secondary colour. No strong negative associations.'},
+    ],
+    trust: ['MoMo logo (40M+ users, pink elephant — most recognised fintech brand)', 'VNPay / VietQR badge', '"Bảo mật" (security) and "An toàn" (safe) text on payment screens', 'Verified user review counts — Vietnamese users heavily weight social proof numbers', '"Top App" award badges (e.g., Google Play Best App)', 'Bank logos (Vietcombank, VietinBank, BIDV) for transfer payments'],
+    patterns: 'Zalo is the super-app (messaging + ZaloPay + news + Zalo OA mini-programs). MoMo for payments. Dense, promotion-heavy layouts with countdown timers and discount banners are normal and expected — this is the Shopee/Lazada/MoMo pattern. Vietnamese e-commerce UIs are visually very active. Minimal design can feel cold or unfinished.',
+    tone: '"Bạn" (you, informal) is standard for tech/consumer apps targeting under-40s. "Quý khách" (esteemed customer) for formal or apologetic contexts ("Quý khách vui lòng..." = Please...). Warm greeting with name: "Chào [tên]!". Vietnamese copy often uses exclamation marks genuinely — enthusiasm is authentic, not pushy. Error messages should be apologetic and helpful.',
+    seasons: [
+      {name:'Tết Nguyên Đán / Lunar New Year (Jan/Feb)', palette:'Red, gold, peach blossom (hoa đào, North), yellow apricot blossom (hoa mai, South)', travel:'⚠ Extreme bus season. Entire country travels home. Tickets sell out 3–4 weeks ahead. Most important campaign opportunity of the year. "Về quê đón Tết" (going home for Tết) is the emotional frame.'},
+      {name:'Reunification Day + Labour Day (Apr 30 + May 1)', palette:'Red, national flag, patriotic', travel:'Major extended weekend. Significant domestic travel — beach routes (Da Nang, Nha Trang) peak.'},
+      {name:'Mid-Autumn Festival (Sep/Oct)', palette:'Yellow, lanterns, mooncake motifs', travel:'Low travel impact but family celebration — gift and confectionery season.'},
+      {name:'Vietnamese Women\'s Day (Oct 20)', palette:'Pink, floral', travel:'No travel impact but significant gifting season.'},
+    ],
+    avoid: ['⚠ White-dominant success or celebratory screens — white = death/mourning in Vietnamese culture', '⚠ White flowers in any festive or positive imagery (white chrysanthemums = funeral)', '⚠ Using red as an error/danger colour — it means luck and prosperity. Use orange or amber for errors instead', 'Do not strip Vietnamese diacritics from names or addresses — legally and culturally incorrect'],
+  },
+  co: {
+    colors: [
+      {swatch:'#FCD116', name:'Yellow', safe:true, meaning:'National flag colour (top stripe), sun, wealth', guidance:'Positive and warm. Part of the tricolour (yellow/blue/red). Safe for highlights and warm states.'},
+      {swatch:'#003087', name:'Blue', safe:true, meaning:'National flag colour (middle stripe), trust, sky', guidance:'Strong trust colour. Use for payment confirmation, security messaging, and professional contexts.'},
+      {swatch:'#D0021B', name:'Red', safe:true, meaning:'National flag colour (bottom stripe), passion, energy', guidance:'Safe and positive for CTAs.'},
+      {swatch:'#FFFFFF', name:'White', safe:true, meaning:'Peace, cleanliness', guidance:'Standard background. No negative associations.'},
+    ],
+    trust: ['Nequi logo (Bancolombia — 54% adult penetration, highest trust for digital wallets)', 'PSE orange button (established for 20+ years — instantly recognised for bank transfers)', 'Bre-B badge (Banco de la República — central bank, launched Sept 2025)', 'Visa/Mastercard security icons', 'Efecty logo (cash payment trust for lower-income users)', 'Visible WhatsApp contact number on checkout — acts as a trust signal in Colombia'],
+    patterns: 'Nequi and Rappi (delivery super-app) set UX expectations. WhatsApp functions as the primary customer service layer — a WhatsApp contact on the checkout page is a trust signal, not just a convenience. Checkout flows work better with explanation at each step — Colombian users appreciate context, not just transactional prompts. Warm, conversational UI copy performs better than terse English-style copy.',
+    tone: '⚠ Use "usted" not "tú" — Colombians use "usted" even between close friends in Bogotá and more formal contexts. "Tú" can feel presumptuous for new or first-purchase relationships. Switch to "tú" only in youth-targeted or very casual contexts. Colombian Spanish is warm and personal — address by first name, use exclamation marks genuinely. "¡Hola, [nombre]!" is natural. Error messages should apologise warmly.',
+    seasons: [
+      {name:'Semana Santa / Holy Week (March/April)', palette:'Purple, gold, religious procession imagery', travel:'⚠ Biggest travel week of the year. All bus routes sell out. Medellín, Cartagena, Villa de Leyva peak. Book 3–4 weeks ahead. Avoid promotional tone — this is a solemn religious week.'},
+      {name:'Fiestas Patrias / Independence Day (Jul 20)', palette:'Yellow, blue, red — national tricolour', travel:'Significant long-weekend travel.'},
+      {name:'Amor y Amistad (3rd Saturday of September)', palette:'Pink, warm tones, friendship/couple themes', travel:'No travel impact. Colombian equivalent of Valentine\'s Day — inclusive of friendships.'},
+      {name:'Novenas de Aguinaldos (Dec 16–24)', palette:'Red, gold, nativity, aguinaldo parties', travel:'Significant travel home for Christmas. Family routes peak.'},
+    ],
+    avoid: ['⚠ "Tú" as default second-person — use "usted" in Colombian Spanish UI copy', 'Cold, terse, transactional copy tone — Colombian users disengage from robotic-sounding UI', 'Imagery that only shows mestizo/white faces — Afro-Colombian representation (6%, Pacific/Caribbean coast) is historically absent from advertising and is noticed positively when included', 'Avoid yellow/blue/red in flag-stripe proportions — unintentional flag mirroring can read as political'],
+  },
+  pe: {
+    colors: [
+      {swatch:'#D0021B', name:'Red', safe:true, meaning:'National flag colour (left and right stripes), energy, passion', guidance:'Safe and positive. Red + white is the Peruvian national palette.'},
+      {swatch:'#FFFFFF', name:'White', safe:true, meaning:'National flag colour (centre stripe), purity', guidance:'Standard background. Fine for UI. Part of the national palette — positive in combination with red.'},
+      {swatch:'#FFD700', name:'Gold / Yellow', safe:true, meaning:'Inca solar deity Inti, heritage, wealth — deeply culturally resonant', guidance:'Very positive. Gold resonates with Inca identity and national pride. Safe for premium tiers and success states.'},
+      {swatch:'#6A0DAD', name:'Purple', safe:true, meaning:'Lord of Miracles (El Señor de los Milagros) — the most important Catholic devotion in Peru', guidance:'Purple in October is the most recognisable religious visual in Peru. Resonant for Andean and Catholic audiences. Use with respect in October.'},
+    ],
+    trust: ['Yape logo (BCP-backed, 69% of economically active population — #1 trust signal)', 'Plin logo (BBVA/Scotiabank/Interbank consortium)', 'Visa/Mastercard security icons', 'PagoEfectivo logo (cash trust for informal economy, rural users)', 'BCP bank logo for older demographic', 'Physical agent / office address visible on page for rural users — signals legitimacy'],
+    patterns: 'Yape is the dominant payment mental model — users expect to see Yape QR on every checkout. Rappi for urban delivery. WhatsApp for everything transactional. Notable: desktop gets ~50% of web traffic (equal to mobile) — invest in desktop UX equally, not as an afterthought. Peruvian users are more patient with multi-step checkout than Colombian users.',
+    tone: '"Usted" remains common in traditional contexts and with older demographics. "Tú" is standard in digital/youth apps. Peruvian Spanish is slightly more reserved than Colombian — warm but not as effusively casual. Straightforward, honest copy is appreciated — avoid overselling language ("¡Increíble oferta!" gets less trust in Peru than in Colombia). Address by first name where possible.',
+    seasons: [
+      {name:'Fiestas Patrias (Jul 28–29)', palette:'Red, white, national flag, patriotic', travel:'⚠ Single biggest bus travel event of the year. All routes sell out 2+ weeks ahead. Lima → Cusco, Lima → Arequipa, Lima → Trujillo peak. Patriotic framing ("Viaja por el Perú") works well.'},
+      {name:'Semana Santa (Holy Week, March/April)', palette:'Purple, gold, religious procession', travel:'Second biggest travel event. Routes to Cusco (Easter celebrations), Ayacucho (famous Semana Santa) peak.'},
+      {name:'Señor de los Milagros (October)', palette:'Purple, gold', travel:'Moderate — Lima processions draw visitors. Andean routes from Lima uptick.'},
+      {name:'Navidad / Christmas (Dec 25)', palette:'Red, gold, green — note: it\'s summer in Peru', travel:'Family travel home. ⚠ It is summer in Peru (Southern Hemisphere) — avoid snow/winter imagery in Christmas campaigns.'},
+    ],
+    avoid: ['⚠ Snow or winter imagery in December — Christmas in Peru is summer (Southern Hemisphere)', '⚠ Underrepresenting Andean and indigenous identity — ~25% identify as indigenous, concentrated on the exact highland bus routes', 'Overly slick/luxury design language for rural route users — it can feel alienating for Andean communities', 'Using purple outside of October without the religious association — it is strongly tied to Señor de los Milagros'],
+  },
+};
+
+function renderCulture(code) {
+  const d = CULTURE_DATA[code];
+  if (!d) return '';
+  return `
+    <div class="table-wrap">
+      <div class="table-title">Colour associations — designer decisions</div>
+      <table class="ref-table">
+        <tr><th>Colour</th><th>Cultural meaning</th><th>UX guidance</th></tr>
+        ${d.colors.map(c=>`
+          <tr ${!c.safe ? 'style="background:#fdf0f0"' : ''}>
+            <td>
+              <div style="display:flex;align-items:center;gap:10px">
+                <div style="width:28px;height:28px;border-radius:5px;background:${c.swatch};border:1px solid rgba(0,0,0,0.12);flex-shrink:0"></div>
+                <span style="font-weight:500;font-size:13px">${c.name}</span>
+                ${!c.safe ? '<span class="badge badge-missing" style="font-size:9px">caution</span>' : ''}
+              </div>
+            </td>
+            <td style="font-size:13px">${c.meaning}</td>
+            <td class="note">${c.guidance}</td>
+          </tr>`).join('')}
+      </table>
+    </div>
+    <div class="table-wrap" style="border-color:#f0c66e">
+      <div class="table-title" style="background:#fff8e6;color:#7a4f00">Things to avoid — specific to this market</div>
+      <table class="ref-table">
+        ${d.avoid.map(a=>`<tr><td style="width:20px;vertical-align:top;padding-top:12px;color:#c0392b;font-weight:700">!</td><td style="font-size:13px;line-height:1.65;padding:10px 12px">${a}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Trust signals — what makes users trust your checkout here</div>
+      <table class="ref-table">
+        ${d.trust.map(t=>`<tr><td style="width:20px;vertical-align:top;padding-top:12px;color:var(--ink3)">›</td><td style="font-size:13px;line-height:1.65;padding:10px 12px">${t}</td></tr>`).join('')}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Local app patterns — what users are trained to expect</div>
+      <div style="padding:12px 16px;font-size:13px;color:var(--ink2);line-height:1.8;background:var(--surface)">${d.patterns}</div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Copy tone &amp; voice</div>
+      <div style="padding:12px 16px;font-size:13px;color:var(--ink2);line-height:1.8;background:var(--surface)">${d.tone}</div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Commercial seasons — design &amp; bus travel implications</div>
+      <table class="ref-table">
+        <tr><th style="width:220px">Season</th><th style="width:180px">Palette / motifs</th><th>Travel impact</th></tr>
+        ${d.seasons.map(s=>`<tr>
+          <td style="font-weight:500;font-size:13px">${s.name}</td>
+          <td class="note">${s.palette}</td>
+          <td class="note">${s.travel}</td>
+        </tr>`).join('')}
+      </table>
+    </div>
+  `;
+}
+
 function renderMessaging(code) {
   const d = MESSAGING_DATA[code];
   if (!d) return '';
@@ -1364,6 +1548,7 @@ function renderMarket() {
       <button class="tab ${activeTab==='names'?'active':''}" data-tab="names" onclick="switchTab('names')">Names &amp; Forms</button>
       <button class="tab ${activeTab==='payments'?'active':''}" data-tab="payments" onclick="switchTab('payments')">Payments</button>
       <button class="tab ${activeTab==='messaging'?'active':''}" data-tab="messaging" onclick="switchTab('messaging')">Messaging</button>
+      <button class="tab ${activeTab==='culture'?'active':''}" data-tab="culture" onclick="switchTab('culture')">Design Culture</button>
       <button class="tab ${activeTab==='a11y'?'active':''}" data-tab="a11y" onclick="switchTab('a11y')">Accessibility</button>
       <button class="tab ${activeTab==='devices'?'active':''}" data-tab="devices" onclick="switchTab('devices')">Devices &amp; Browsers</button>
     </div>
@@ -1622,6 +1807,9 @@ formatter.<span class="cs">string</span>(from: <span class="cn">1234.56</span>)
     </div>
     <div id="tab-messaging" class="section ${activeTab==='messaging'?'active':''}">
       ${renderMessaging(currentMarket)}
+    </div>
+    <div id="tab-culture" class="section ${activeTab==='culture'?'active':''}">
+      ${renderCulture(currentMarket)}
     </div>
     <div id="tab-a11y" class="section ${activeTab==='a11y'?'active':''}">
       ${renderA11y(currentMarket)}
