@@ -608,6 +608,8 @@
     <div class="nav-label">Tools</div>
     <button class="nav-item tool-btn" data-tool="formatter" onclick="showTool('formatter', event)"><span class="tool-icon">⌨</span> Formatter</button>
     <button class="nav-item tool-btn" data-tool="calendar" onclick="showTool('calendar', event)"><span class="tool-icon">📅</span> Campaigns</button>
+    <button class="nav-item tool-btn" data-tool="discount" onclick="showTool('discount', event)"><span class="tool-icon">🏷</span> Discount Copy</button>
+    <button class="nav-item tool-btn" data-tool="navcopy" onclick="showTool('navcopy', event)"><span class="tool-icon">📋</span> UI Copy</button>
   </div>
 </nav>
 
@@ -631,6 +633,8 @@
     <optgroup label="Tools">
       <option value="formatter">⌨ Formatter</option>
       <option value="calendar">📅 Campaigns</option>
+      <option value="discount">🏷 Discount Copy</option>
+      <option value="navcopy">📋 UI Copy</option>
     </optgroup>
   </select>
 </div>
@@ -913,7 +917,7 @@ function selectMarket(code, e) {
 }
 
 function selectMarketFromSelect(code) {
-  if (code === 'formatter' || code === 'calendar') {
+  if (code === 'formatter' || code === 'calendar' || code === 'discount' || code === 'navcopy') {
     showTool(code);
     return;
   }
@@ -938,6 +942,8 @@ function showTool(name, e) {
   if (sel) sel.value = name;
   if (name === 'formatter') renderFormatter();
   else if (name === 'calendar') renderCalendar();
+  else if (name === 'discount') renderDiscountTool();
+  else if (name === 'navcopy') renderNavCopyTool();
 }
 
 
@@ -952,6 +958,164 @@ const NUM_DATA = {
   co: { sep:'period/comma', pct:{ex:['15%','0,5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['$ 1,2 mil','$ 4,5 millones'],note:'"mil" not K. "millones" not M. Very different from SEA.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Spanish ordinals use degree symbol. "primero/segundo" for formal.'}, neg:{ex:['-$ 1.234.567'],note:'Minus prefix. Period as thousands, comma as decimal.'}, frac:{ex:['1,5 horas','0,5 km'],note:'Comma as decimal.'} },
   pe: { sep:'comma/period', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'mil',m:'millón',ex:['S/ 1,200','S/ 4,500'],note:'Write full number or "mil". Not K/M.'}, ordinal:{ex:['1.°','2.°','3.°'],note:'Same as Colombian Spanish.'}, neg:{ex:['-S/ 1,234.56'],note:'Minus prefix. Comma thousands, period decimal.'}, frac:{ex:['1.5 horas','0.5 km'],note:'Period as decimal (different from Colombia).'} },
   in: { sep:'south-asian', pct:{ex:['15%','0.5%'],wrong:['15 %'],pos:'suffix, no space'}, abbr:{k:'K or L (lakh)',m:'Cr (crore)',ex:['₹1.2K','₹1.5L','₹2.5Cr'],note:'K/M internationally; L (lakh = 100K) and Cr (crore = 10M) in Indian context. Never use L/Cr in international UI.'}, ordinal:{ex:['1st','2nd','3rd','4th'],note:'Standard English ordinals.'}, neg:{ex:['-₹12.50','(₹12.50)'],note:'Minus prefix standard. Parentheses for accounting contexts.'}, frac:{ex:['1.5 hrs','0.5 km'],note:'Decimal notation standard.'} },
+};
+
+// ── DISCOUNT COPY DATA ──
+// flatOff  = raw amount chip, e.g. "₹200 off"
+// saving   = savings badge/label, e.g. "Saving ₹200"
+// youSave  = inline fare-card label, e.g. "You save ₹200"
+// youSaved = post-booking confirmation, e.g. "You saved ₹200"
+// cashback = cashback offer label where applicable
+const DISCOUNT_DATA = {
+  sg: {
+    lang:'English', off:'20% off', offAlt:null, upTo:'Up to SGD 5',
+    note:'Standard EN, no change needed', chipWarn:false, fontNote:null,
+    flatOff:  { copy:'S$5 off',           note:'Symbol is always S$, never bare $ — bare $ reads as USD in multi-market UI.' },
+    saving:   { copy:'Saving S$5',        note:'Gerund form for inline badge or price-card label.' },
+    youSave:  { copy:'You save S$5',      note:'Used on fare cards and in cart summary.' },
+    youSaved: { copy:'You saved S$5',     note:'Post-booking confirmation screen.' },
+    cashback: { copy:'S$5 cashback',      note:'Cashback offer label. "Cashback" is widely understood in SG fintech.' },
+  },
+  my: {
+    lang:'English / Malay', off:'20% off', offAlt:'20% diskaun', upTo:'Sehingga RM 5',
+    note:'Malay uses "diskaun" — English "off" also widely understood in MY', chipWarn:false, fontNote:null,
+    flatOff:  { copy:'RM5 off / RM5 diskaun', note:'"Diskaun" is the Malay term; "off" is also widely understood. RM prefix, no space.' },
+    saving:   { copy:'Jimat RM5',             note:'"Jimat" = save/economise. Standard savings verb — used by Grab MY, Touch \'n Go.' },
+    youSave:  { copy:'Anda jimat RM5',        note:'"Anda" = you (formal). "Kamu jimat RM5" is the informal equivalent.' },
+    youSaved: { copy:'Anda dah jimat RM5',    note:'"Dah" = already (colloquial). Formal written form: "Anda telah jimat RM5".' },
+    cashback: { copy:'RM5 cashback',          note:'"Cashback" is a widely-used loanword in Malaysian digital products.' },
+  },
+  id: {
+    lang:'Bahasa Indonesia', off:'Diskon 20%', offAlt:null, upTo:'Hingga Rp5.000',
+    note:'"Off" not used — always "diskon". Noun-first word order', chipWarn:true, fontNote:null,
+    flatOff:  { copy:'Diskon Rp5.000',         note:'Same noun-first pattern as the percentage form. Period as thousands, no decimal shown.' },
+    saving:   { copy:'Hemat Rp5.000',          note:'"Hemat" = economise/save. The standard savings label across Gojek, Tokopedia, Traveloka.' },
+    youSave:  { copy:'Kamu hemat Rp5.000',     note:'"Kamu" = you (informal — standard register for Indonesian apps). No tense change needed for present.' },
+    youSaved: { copy:'Kamu sudah hemat Rp5.000', note:'"Sudah" = already/completed. Marks past aspect. "Kamu hemat" alone also reads as past when context is clear.' },
+    cashback: { copy:'Cashback Rp5.000',       note:'"Cashback" is a widely-understood loanword. Noun-first word order — same pattern as "Diskon".' },
+  },
+  vn: {
+    lang:'Vietnamese', off:'Giảm 20%', offAlt:null, upTo:'Lên đến 5.000 ₫',
+    note:'"Giảm" = reduce/discount. Never "off". Dong symbol after number', chipWarn:false, fontNote:null,
+    flatOff:  { copy:'Giảm 5.000 ₫',            note:'"Giảm" covers both percentage and flat amounts. Dong symbol ₫ trails with a space.' },
+    saving:   { copy:'Tiết kiệm 5.000 ₫',       note:'"Tiết kiệm" = save/economise. Used on product cards and in promotional copy — Shopee VN, Lazada VN.' },
+    youSave:  { copy:'Bạn tiết kiệm 5.000 ₫',   note:'"Bạn" = you (neutral, standard in apps). Natural in cart and fare summary.' },
+    youSaved: { copy:'Bạn đã tiết kiệm 5.000 ₫', note:'"Đã" = past tense marker. Use on booking confirmation screen.' },
+    cashback: { copy:'Hoàn tiền 5.000 ₫',        note:'"Hoàn tiền" = return money / cashback. The English loanword "cashback" is also accepted in fintech contexts.' },
+  },
+  kh: {
+    lang:'Khmer', off:'បញ្ចុះ 20%', offAlt:null, upTo:'រហូតដល់ 5.000 ៛',
+    note:'"បញ្ចុះ" (banchoh) = discount. Riel symbol after number', chipWarn:true,
+    fontNote:'Noto Sans Khmer required — without it this string renders as tofu boxes. Check your font bundle.',
+    flatOff:  { copy:'បញ្ចុះ 5.000 ៛',      note:'"បញ្ចុះ" covers both percentage and flat amount. USD co-currency is common — "បញ្ចុះ $5" may be preferred for higher-value offers.' },
+    saving:   { copy:'សន្សំ 5.000 ៛',       note:'"សន្សំ" (sansam) = save/accumulate. Savings badge or label.' },
+    youSave:  { copy:'អ្នកសន្សំ 5.000 ៛',   note:'"អ្នក" (neak) = you (neutral and respectful).' },
+    youSaved: { copy:'អ្នកបានសន្សំ 5.000 ៛', note:'"បាន" = past aspect marker. Use on booking confirmation.' },
+    cashback: { copy:'cashback 5.000 ៛',     note:'"Cashback" (English loanword) is understood in Cambodian digital products. Native alternative: "សងវិញ" (sang vinh) = returned money.' },
+  },
+  pe: {
+    lang:'Spanish', off:'20% dto.', offAlt:null, upTo:'Hasta S/ 5,00',
+    note:'Sol uses S/ prefix. Comma as decimal in PE', chipWarn:true, fontNote:null,
+    flatOff:  { copy:'S/ 5,00 de dto.',    note:'"De dto." = of discount. Use "de descuento" in non-abbreviated contexts. Comma as decimal.' },
+    saving:   { copy:'Ahorra S/ 5,00',     note:'"Ahorra" = save (informal imperative, tú). Standard in Peruvian consumer apps.' },
+    youSave:  { copy:'Ahorras S/ 5,00',    note:'"Ahorras" = you save (2nd person present, tú). Used on fare cards and in cart.' },
+    youSaved: { copy:'Ahorraste S/ 5,00',  note:'"Ahorraste" = you saved (past tense, tú). Post-booking confirmation screen.' },
+    cashback: null,
+  },
+  co: {
+    lang:'Spanish', off:'20% dto.', offAlt:null, upTo:'Hasta COP 5.000',
+    note:'Period as thousands separator. $ sign ambiguous — use COP', chipWarn:true, fontNote:null,
+    flatOff:  { copy:'COP 5.000 de dto.',    note:'Period as thousands. Always COP not $ — bare $ reads as USD. "De descuento" for full form.' },
+    saving:   { copy:'Ahorra COP 5.000',     note:'"Ahorra" = save (informal imperative). Standard across Colombian consumer apps — Rappi, Uber CO.' },
+    youSave:  { copy:'Ahorras COP 5.000',    note:'"Ahorras" = you save (tuteo, tú). Colombian apps use tuteo — never ustedeo for conversational UI copy.' },
+    youSaved: { copy:'Ahorraste COP 5.000',  note:'"Ahorraste" = you saved (past tense). Period as thousands — "5.000" not "5,000".' },
+    cashback: null,
+  },
+  in: {
+    lang:'English', off:'20% off', offAlt:null, upTo:'Up to ₹200',
+    note:'Standard EN. ₹ prefix, no space. Never "INR 200" in consumer UI.', chipWarn:false, fontNote:null,
+    flatOff:  { copy:'₹200 off',          note:'₹ prefix, no space. Never "INR 200 off" or "Rs. 200 off" in consumer UI — ₹ is the standard.' },
+    saving:   { copy:'Saving ₹200',        note:'Gerund form — standard badge/chip label in Indian transport and e-commerce apps (redBus, MakeMyTrip, ixigo).' },
+    youSave:  { copy:'You save ₹200',      note:'Inline label on fare cards and cart summary.' },
+    youSaved: { copy:'You saved ₹200',     note:'Post-booking confirmation screen.' },
+    cashback: { copy:'₹200 cashback',      note:'Cashback is a primary promotional mechanic in India. Heavily used by redBus, MakeMyTrip, Paytm. Always ₹ prefix, no space.' },
+  },
+};
+
+// ── NAV LABEL COPY DATA ──
+const NAV_COPY_DATA = {
+  sg: {
+    home:     { copy: 'Home',        note: null },
+    bookings: { copy: 'Bookings',    note: '"My Trips" is a common alternative in travel apps.' },
+    offers:   { copy: 'Offers',      note: null },
+    help:     { copy: 'Help',        note: null },
+    account:  { copy: 'Account',     note: null },
+    widthWarn: false, fontNote: null,
+    marketNote: 'English UI — no localisation needed. All labels identical to baseline.',
+  },
+  my: {
+    home:     { copy: 'Utama',       note: '"Laman Utama" is correct but too long for a tab. "Utama" (primary/main) is the UI standard — used by Grab MY and Touch \'n Go.' },
+    bookings: { copy: 'Tempahan',    note: '"Tempahan" = reservation/booking. Standard Malay UI term.' },
+    offers:   { copy: 'Tawaran',     note: '"Tawaran" = offers/deals. "Promosi" is an alternative but feels more marketing-register than navigation.' },
+    help:     { copy: 'Bantuan',     note: '"Bantuan" = help. Universal across Malaysian apps.' },
+    account:  { copy: 'Akaun',       note: '"Akaun" = account. Standard Malay spelling.' },
+    widthWarn: false, fontNote: null,
+    marketNote: 'English labels are also valid in en-MY context — bilingual users recognise both. All Malay labels fit within standard tab bar width.',
+  },
+  id: {
+    home:     { copy: 'Beranda',     note: 'The standard home tab label across all major Indonesian apps — Gojek, Tokopedia, Traveloka, Grab ID.' },
+    bookings: { copy: 'Pesanan',     note: '"Pesanan" = orders/bookings. Used by Gojek, Traveloka. Avoid "Pemesanan" — too formal and a syllable longer.' },
+    offers:   { copy: 'Promo',       note: '"Promo" is the universal term in Indonesian consumer apps. Never "Penawaran" for a tab label — too formal and too long.' },
+    help:     { copy: 'Bantuan',     note: '"Bantuan" = help. Standard across all Indonesian apps.' },
+    account:  { copy: 'Akun',        note: '"Akun" = account. "Profil" is also used but "Akun" is more accurate when the tab covers full account management.' },
+    widthWarn: false, fontNote: null,
+    marketNote: 'All labels are equal to or shorter than English — no width risk.',
+  },
+  vn: {
+    home:     { copy: 'Trang chủ',  note: '"Trang chủ" = homepage. Standard across all Vietnamese apps — Grab VN, MoMo, Zalo.' },
+    bookings: { copy: 'Vé của tôi', note: '"Vé của tôi" = my tickets. Natural for a transport app. Shorter alternative: "Chuyến đi" (trips, 9 chars) if width is constrained.' },
+    offers:   { copy: 'Ưu đãi',    note: '"Ưu đãi" = offers/promotions. Standard Vietnamese e-commerce term — Shopee VN, Lazada VN, MoMo.' },
+    help:     { copy: 'Hỗ trợ',    note: '"Hỗ trợ" = support. More professional than "Giúp đỡ". Used by Grab VN, MoMo.' },
+    account:  { copy: 'Tài khoản', note: '"Tài khoản" = account. Universal in Vietnamese apps.' },
+    widthWarn: true, fontNote: null,
+    marketNote: '"Vé của tôi" and "Tài khoản" are the longest labels — test the 5-tab bar at 360px. Vietnamese tone diacritics render slightly wider than base Latin glyphs.',
+  },
+  kh: {
+    home:     { copy: 'ទំព័រដើម',   note: '"Tompear Daem" = home page. Standard Khmer UI term.' },
+    bookings: { copy: 'ការកក់',     note: '"Kar Kok" = booking/reservation. Short and unambiguous.' },
+    offers:   { copy: 'ការផ្ដល់ជូន', note: '"Kar Pdal Choun" = offer/promotion. If width is critical, the loanword "ប្រម៉ូសិន" (promo) is acceptable and shorter to render.' },
+    help:     { copy: 'ជំនួយ',     note: '"Chomnuoy" = help/assistance.' },
+    account:  { copy: 'គណនី',      note: '"Koneay" = account.' },
+    widthWarn: true, fontNote: 'Noto Sans Khmer required. All 5 labels render as tofu boxes without it.',
+    marketNote: '⚠ Khmer glyphs stack vertically — measure rendered pixel width, not character count. "ការផ្ដល់ជូន" (Offers) is the most at-risk label. Test each tab label at 360px.',
+  },
+  co: {
+    home:     { copy: 'Inicio',     note: 'Universal Spanish UI — iOS, Android, Rappi, and Uber all use "Inicio" for home.' },
+    bookings: { copy: 'Mis viajes', note: '"Mis viajes" (my trips) is more natural than "Reservas" for a transport app. Shorter alternative: "Viajes" (7 chars) if width is constrained.' },
+    offers:   { copy: 'Ofertas',   note: '"Ofertas" = offers. Standard Spanish.' },
+    help:     { copy: 'Ayuda',     note: '"Ayuda" = help. Universal Spanish UI.' },
+    account:  { copy: 'Cuenta',    note: '"Cuenta" = account. Universal Spanish UI.' },
+    widthWarn: true, fontNote: null,
+    marketNote: '"Mis viajes" (10 chars including space) is the longest label — borderline for a 5-tab bar at 360px. Shorten to "Viajes" if it overflows at your smallest breakpoint.',
+  },
+  pe: {
+    home:     { copy: 'Inicio',     note: 'Same as Colombia — universal Spanish UI.' },
+    bookings: { copy: 'Mis viajes', note: 'Same as Colombia. Natural for a Peruvian transport app.' },
+    offers:   { copy: 'Ofertas',   note: 'Same as Colombia.' },
+    help:     { copy: 'Ayuda',     note: 'Same as Colombia.' },
+    account:  { copy: 'Cuenta',    note: 'Same as Colombia.' },
+    widthWarn: true, fontNote: null,
+    marketNote: 'Identical to Colombia for these navigation labels. Same "Mis viajes" width consideration applies.',
+  },
+  in: {
+    home:     { copy: 'Home',       note: 'English UI — standard.' },
+    bookings: { copy: 'Bookings',   note: '"My Trips" is a common alternative in Indian travel apps (MakeMyTrip, ixigo).' },
+    offers:   { copy: 'Offers',     note: 'Standard English.' },
+    help:     { copy: 'Help',       note: 'Standard English.' },
+    account:  { copy: 'Account',    note: '"Profile" is a common alternative.' },
+    widthWarn: false, fontNote: null,
+    marketNote: 'English UI throughout. Maintain established redBus India patterns.',
+  },
 };
 
 // ── NAME / FORM DATA ──
@@ -1735,6 +1899,7 @@ function renderMarket() {
       <button class="tab ${activeTab==='culture'?'active':''}" data-tab="culture" onclick="switchTab('culture')">Design Culture</button>
       <button class="tab ${activeTab==='a11y'?'active':''}" data-tab="a11y" onclick="switchTab('a11y')">Accessibility</button>
       <button class="tab ${activeTab==='devices'?'active':''}" data-tab="devices" onclick="switchTab('devices')">Devices &amp; Browsers</button>
+      <button class="tab ${activeTab==='discounts'?'active':''}" data-tab="discounts" onclick="switchTab('discounts')">UI Copy</button>
     </div>
 
     <div id="tab-currency" class="section ${activeTab==='currency'?'active':''}">
@@ -2065,6 +2230,234 @@ function renderMarket() {
     <div id="tab-devices" class="section ${activeTab==='devices'?'active':''}">
       ${renderDevices(currentMarket)}
     </div>
+    <div id="tab-discounts" class="section ${activeTab==='discounts'?'active':''}">
+      ${renderDiscountTab(currentMarket)}
+    </div>
+  `;
+}
+
+function renderDiscountTab(code) {
+  const d = DISCOUNT_DATA[code];
+  if (!d) return `<div class="table-wrap"><div style="padding:16px;color:var(--ink3);font-size:13px">No discount copy data for this market.</div></div>`;
+  const khFs = code === 'kh';
+
+  const variantRows = [
+    { label: '"X% off"',         copy: d.off + (d.offAlt ? ` / ${d.offAlt}` : ''), note: d.note },
+    { label: '"[Amount] off"',   copy: d.flatOff?.copy,  note: d.flatOff?.note },
+    { label: '"Up to [X]"',      copy: d.upTo,           note: 'Max-cap chip or callout. Swap the example amount with the actual cap using local number format.' },
+    { label: '"Saving [X]"',     copy: d.saving?.copy,   note: d.saving?.note },
+    { label: '"You save [X]"',   copy: d.youSave?.copy,  note: d.youSave?.note },
+    { label: '"You saved [X]"',  copy: d.youSaved?.copy, note: d.youSaved?.note },
+    { label: '"[X] cashback"',   copy: d.cashback?.copy, note: d.cashback?.note },
+  ].filter(r => r.copy);
+
+  return `
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-label">Percentage discount${d.offAlt ? ' (EN)' : ''}</div>
+        <div class="info-card-value" style="font-size:${khFs?'20px':'22px'}">${d.off}</div>
+        <div class="info-card-sub">${d.lang}</div>
+      </div>
+      ${d.offAlt ? `<div class="info-card">
+        <div class="info-card-label">Percentage discount (Malay)</div>
+        <div class="info-card-value" style="font-size:22px">${d.offAlt}</div>
+        <div class="info-card-sub">Bahasa Melayu</div>
+      </div>` : ''}
+      <div class="info-card">
+        <div class="info-card-label">Flat amount off</div>
+        <div class="info-card-value" style="font-size:${khFs?'16px':'20px'}">${d.flatOff?.copy || '—'}</div>
+        <div class="info-card-sub">Replace example amount with actual value</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">Savings label</div>
+        <div class="info-card-value" style="font-size:${khFs?'14px':'18px'}">${d.saving?.copy || '—'}</div>
+        <div class="info-card-sub">Badge / inline fare-card label</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">All discount copy patterns</div>
+      <table class="ref-table">
+        <tr><th>Pattern</th><th>Use this</th><th>Notes</th></tr>
+        ${variantRows.map(r => `<tr>
+          <td style="white-space:nowrap">${r.label}</td>
+          <td class="mono" style="font-size:${khFs?'12px':'13px'}">${r.copy}</td>
+          <td class="note">${r.note || '—'}</td>
+        </tr>`).join('')}
+      </table>
+    </div>
+    ${d.chipWarn ? `<div class="warn-box">⚠ Chip width: "${d.off}" is longer than "20% off" — check chip/badge width at your smallest breakpoint. Truncation here destroys the offer message.</div>` : ''}
+    ${d.fontNote ? `<div class="warn-box">⚠ Font dependency: ${d.fontNote}</div>` : ''}
+    ${renderNavLabelsSection(code)}
+  `;
+}
+
+function renderNavLabelsSection(code) {
+  const n = NAV_COPY_DATA[code];
+  if (!n) return '';
+  const tabs = ['home','bookings','offers','help','account'];
+  const labels = ['Home','Bookings','Offers','Help','Account'];
+  const rows = tabs.map((key, i) => {
+    const item = n[key];
+    return `<tr>
+      <td>${labels[i]}</td>
+      <td class="mono" style="font-size:${code==='kh'?'13px':'14px'}">${item.copy}</td>
+      <td class="note">${item.note || '—'}</td>
+    </tr>`;
+  }).join('');
+  return `
+    <div class="table-wrap" style="margin-top:1.5rem">
+      <div class="table-title">Navigation tab labels</div>
+      <table class="ref-table">
+        <tr><th>Tab</th><th>Label</th><th>Notes</th></tr>
+        ${rows}
+      </table>
+    </div>
+    ${n.marketNote ? `<div class="${n.widthWarn||n.fontNote?'warn-box':'device-alert'}" style="${!n.widthWarn&&!n.fontNote?'background:var(--surface2);border-color:var(--rule);color:var(--ink2)':''}">${n.marketNote}</div>` : ''}
+    ${n.fontNote ? `<div class="warn-box">⚠ Font: ${n.fontNote}</div>` : ''}
+  `;
+}
+
+function renderDiscountTool() {
+  const main = document.getElementById('main');
+  const markets = ['sg','my','id','vn','kh','pe','co','in'];
+
+  // Table 1 — percentage + up-to overview
+  const overviewRows = markets.map(code => {
+    const m = MARKETS[code];
+    const d = DISCOUNT_DATA[code];
+    if (!d) return '';
+    const chipCell = d.chipWarn
+      ? `<span class="badge badge-missing">Check width</span>`
+      : `<span class="badge badge-ok" style="background:#d1fae5;color:#065f46;border-color:#6ee7b7">OK</span>`;
+    const fontCell = d.fontNote ? `<span class="badge badge-missing">Noto Sans Khmer</span>` : '—';
+    return `<tr>
+      <td style="white-space:nowrap"><span class="flag">${m.flag}</span> ${m.name}</td>
+      <td class="mono" style="font-size:${code==='kh'?'12px':'13px'}">${d.off}${d.offAlt?`<br><span style="color:var(--ink3)">${d.offAlt}</span>`:''}</td>
+      <td class="mono" style="font-size:${code==='kh'?'12px':'13px'}">${d.upTo}</td>
+      <td class="note">${d.note}</td>
+      <td style="text-align:center">${chipCell}</td>
+      <td style="text-align:center">${fontCell}</td>
+    </tr>`;
+  }).join('');
+
+  // Table 2 — all variants cross-market
+  const variantKeys = [
+    { key:'flatOff',  label:'"[Amount] off"' },
+    { key:'saving',   label:'"Saving [X]"' },
+    { key:'youSave',  label:'"You save [X]"' },
+    { key:'youSaved', label:'"You saved [X]"' },
+    { key:'cashback', label:'"[X] cashback"' },
+  ];
+  const variantRows = variantKeys.map(({ key, label }) => {
+    const cells = markets.map(code => {
+      const d = DISCOUNT_DATA[code];
+      const val = d?.[key]?.copy;
+      return `<td class="mono" style="font-size:${code==='kh'?'11px':'12px'};color:${val?'inherit':'var(--ink3)'}">${val || '—'}</td>`;
+    }).join('');
+    return `<tr><td style="white-space:nowrap;font-size:12px">${label}</td>${cells}</tr>`;
+  }).join('');
+
+  const mktHeaders = markets.map(code => `<th>${MARKETS[code].flag} ${MARKETS[code].name.split(' ')[0]}</th>`).join('');
+
+  main.innerHTML = `
+    <div class="page-header">
+      <h1>🏷 Discount Copy</h1>
+      <div class="sub">All localised discount string patterns across all markets</div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Percentage discount &amp; cap — overview</div>
+      <table class="ref-table">
+        <tr><th>Market</th><th>"X% off"</th><th>"Up to [X]"</th><th>Notes</th><th>Chip width</th><th>Font dep.</th></tr>
+        ${overviewRows}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">All discount variants — cross-market</div>
+      <div style="font-size:11px;color:var(--ink3);padding:8px 12px 4px;font-family:var(--mono)">— = not applicable for this market</div>
+      <div style="overflow-x:auto">
+        <table class="ref-table" style="min-width:700px">
+          <tr><th>Pattern</th>${mktHeaders}</tr>
+          ${variantRows}
+        </table>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Chip space budget</div>
+      <div style="padding:12px 16px;font-size:13px;line-height:1.6;background:var(--surface)">
+        <p style="margin:0 0 8px">"20% dto." and "Diskon 20%" are both longer than "20% off" — check chip width at your smallest breakpoint.</p>
+        <p style="margin:0 0 8px">Savings labels like "Kamu sudah hemat Rp5.000" and "Bạn đã tiết kiệm 5.000 ₫" are much longer than the English equivalent — these are never chip labels. Use them only in fare cards or summary rows where you have full column width.</p>
+        <p style="margin:0">Khmer especially — <span style="font-family:'Noto Sans Khmer',sans-serif">អ្នកបានសន្សំ 5.000 ៛</span> renders wider than Latin text and needs Noto Sans Khmer loaded.</p>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Currency formatting watch-outs in discount strings</div>
+      <table class="ref-table">
+        <tr><th>Market</th><th>Pattern</th><th>Notes</th></tr>
+        <tr><td><strong>IN</strong></td><td class="mono">₹200 off</td><td class="note">₹ prefix, no space. Never "Rs." or "INR" in consumer UI.</td></tr>
+        <tr><td><strong>ID</strong></td><td class="mono">Diskon Rp5.000</td><td class="note">Period as thousands, no decimal. "Rp" prefix, no space.</td></tr>
+        <tr><td><strong>VN</strong></td><td class="mono">Giảm 5.000 ₫</td><td class="note">₫ symbol trails after the number with a space. Period as thousands.</td></tr>
+        <tr><td><strong>KH</strong></td><td class="mono">បញ្ចុះ 5.000 ៛</td><td class="note">៛ symbol trails. USD ("$5") often preferred for higher-value offers.</td></tr>
+        <tr><td><strong>PE</strong></td><td class="mono">S/ 5,00 de dto.</td><td class="note">S/ prefix with space. Comma as decimal.</td></tr>
+        <tr><td><strong>CO</strong></td><td class="mono">COP 5.000 de dto.</td><td class="note">Period as thousands. Always COP not $ — bare $ reads as USD.</td></tr>
+        <tr><td><strong>SG</strong></td><td class="mono">S$5 off</td><td class="note">S$ prefix, no space. Never bare $.</td></tr>
+        <tr><td><strong>MY</strong></td><td class="mono">RM5 off</td><td class="note">RM prefix, no space.</td></tr>
+      </table>
+    </div>
+    <div class="warn-box">⚠ Font dependency: KH needs <strong>Noto Sans Khmer</strong> — all Khmer discount strings render as tofu boxes without it. Verify it is loaded before shipping any KH discount UI.</div>
+  `;
+}
+
+function renderNavCopyTool() {
+  const main = document.getElementById('main');
+  const markets = ['sg','my','id','vn','kh','co','pe','in'];
+  const tabs = ['home','bookings','offers','help','account'];
+  const labels = ['Home','Bookings','Offers','Help','Account'];
+
+  const rows = markets.map(code => {
+    const m = MARKETS[code];
+    const n = NAV_COPY_DATA[code];
+    if (!n) return '';
+    const cells = tabs.map((key,i) => {
+      const item = n[key];
+      const changed = item.copy.toLowerCase() !== labels[i].toLowerCase();
+      return `<td class="mono" style="font-size:${code==='kh'?'12px':'13px'};${changed?'':'color:var(--ink3)'}">${item.copy}</td>`;
+    }).join('');
+    const warnBadge = n.widthWarn ? `<span class="badge badge-missing" style="margin-left:4px">width</span>` : '';
+    const fontBadge = n.fontNote ? `<span class="badge badge-missing" style="margin-left:4px">font</span>` : '';
+    return `<tr>
+      <td style="white-space:nowrap"><span class="flag">${m.flag}</span> ${m.name}${warnBadge}${fontBadge}</td>
+      ${cells}
+    </tr>`;
+  }).join('');
+
+  const noteRows = markets.map(code => {
+    const m = MARKETS[code];
+    const n = NAV_COPY_DATA[code];
+    if (!n || !n.marketNote) return '';
+    return `<tr><td><span class="flag">${m.flag}</span> ${m.name}</td><td class="note">${n.marketNote}</td></tr>`;
+  }).join('');
+
+  main.innerHTML = `
+    <div class="page-header">
+      <h1>📋 UI Copy</h1>
+      <div class="sub">Navigation tab labels across all markets · Home | Bookings | Offers | Help | Account</div>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Tab bar labels — all markets</div>
+      <div style="font-size:11px;color:var(--ink3);padding:8px 12px 4px;font-family:var(--mono)">Greyed = unchanged from English baseline</div>
+      <table class="ref-table">
+        <tr><th>Market</th><th>Home</th><th>Bookings</th><th>Offers</th><th>Help</th><th>Account</th></tr>
+        ${rows}
+      </table>
+    </div>
+    <div class="table-wrap">
+      <div class="table-title">Market notes</div>
+      <table class="ref-table">
+        <tr><th>Market</th><th>Notes</th></tr>
+        ${noteRows}
+      </table>
+    </div>
+    <div class="warn-box">⚠ KH: Noto Sans Khmer must be in your font bundle or all Khmer labels render as tofu. Measure rendered pixel width — Khmer glyph stacks are significantly wider than Latin equivalents at the same font size.</div>
   `;
 }
 
