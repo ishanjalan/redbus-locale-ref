@@ -1023,12 +1023,12 @@ const DISCOUNT_DATA = {
     cashback: null,
   },
   co: {
-    lang:'Spanish', off:'20% dto.', offAlt:null, upTo:'Hasta COP 5.000',
-    note:'Period as thousands separator. $ sign ambiguous — use COP', chipWarn:true, fontNote:null,
-    flatOff:  { copy:'COP 5.000 de dto.',    note:'Period as thousands. Always COP not $ — bare $ reads as USD. "De descuento" for full form.' },
-    saving:   { copy:'Ahorra COP 5.000',     note:'"Ahorra" = save (informal imperative). Standard across Colombian consumer apps — Rappi, Uber CO.' },
-    youSave:  { copy:'Ahorras COP 5.000',    note:'"Ahorras" = you save (tuteo, tú). Colombian apps use tuteo — never ustedeo for conversational UI copy.' },
-    youSaved: { copy:'Ahorraste COP 5.000',  note:'"Ahorraste" = you saved (past tense). Period as thousands — "5.000" not "5,000".' },
+    lang:'Spanish', off:'20% dto.', offAlt:null, upTo:'Hasta $ 5.000',
+    note:'Period as thousands separator. In single-market CO context $ is standard. In multi-market UI (e.g. alongside PE, SG), use COP to avoid USD ambiguity.', chipWarn:true, fontNote:null,
+    flatOff:  { copy:'$ 5.000 de dto.',    note:'$ prefix with space — "$ 5.000". Period as thousands. In a multi-market product use "COP 5.000" to avoid ambiguity with USD.' },
+    saving:   { copy:'Ahorra $ 5.000',     note:'"Ahorra" = save (informal imperative). Standard across Colombian consumer apps — Rappi, Uber CO.' },
+    youSave:  { copy:'Ahorras $ 5.000',    note:'"Ahorras" = you save (tuteo, tú). Colombian apps use tuteo — never ustedeo for conversational UI copy.' },
+    youSaved: { copy:'Ahorraste $ 5.000',  note:'"Ahorraste" = you saved (past tense). Period as thousands — "5.000" not "5,000".' },
     cashback: null,
   },
   in: {
@@ -2398,7 +2398,7 @@ function renderDiscountTool() {
         <tr><td><strong>VN</strong></td><td class="mono">Giảm 5.000 ₫</td><td class="note">₫ symbol trails after the number with a space. Period as thousands.</td></tr>
         <tr><td><strong>KH</strong></td><td class="mono">បញ្ចុះ 5.000 ៛</td><td class="note">៛ symbol trails. USD ("$5") often preferred for higher-value offers.</td></tr>
         <tr><td><strong>PE</strong></td><td class="mono">S/ 5,00 de dto.</td><td class="note">S/ prefix with space. Comma as decimal.</td></tr>
-        <tr><td><strong>CO</strong></td><td class="mono">COP 5.000 de dto.</td><td class="note">Period as thousands. Always COP not $ — bare $ reads as USD.</td></tr>
+        <tr><td><strong>CO</strong></td><td class="mono">$ 5.000 de dto.</td><td class="note">$ prefix with space. Period as thousands. Use COP instead of $ in multi-market UI to avoid USD ambiguity.</td></tr>
         <tr><td><strong>SG</strong></td><td class="mono">S$5 off</td><td class="note">S$ prefix, no space. Never bare $.</td></tr>
         <tr><td><strong>MY</strong></td><td class="mono">RM5 off</td><td class="note">RM prefix, no space.</td></tr>
       </table>
